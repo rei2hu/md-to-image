@@ -4,11 +4,14 @@ import java.io.BufferedReader;
 import java.io.StringReader;
 import java.lang.StringBuilder;
 import java.io.Reader;
+import java.util.ArrayList;
+
+import HTMLParser.Tokens.*;
 
 public class HTMLScanner {
 
-    Reader scanner;
-    StringBuilder sb;
+    private Reader scanner;
+    private StringBuilder sb;
 
     public HTMLScanner(String s) {
         scanner = new BufferedReader(new StringReader(s));
@@ -48,12 +51,22 @@ public class HTMLScanner {
                                 sb.append((char) c);
                             }
                             // if opening tag ends with / then it also closes e.g. <asd />
-                            if (sb.charAt(sb.length() - 1) == '/') {
+                           if (sb.charAt(sb.length() - 1) == '/') {
                                 // remove space and /
                                 sb.setLength(sb.length() - 2);
-                                t = new StandaloneTag(sb.toString());
+                                String s = sb.toString();
+                                String[] kvs = s.split(" ");
+                                if (kvs.length > 1)
+                                    t = new StandaloneTag(kvs[0], java.util.Arrays.copyOfRange(kvs, 1, kvs.length));
+                                else
+                                    t = new StandaloneTag(kvs[0]);
                             } else {
-                                t = new OpeningTag(sb.toString());
+                                String s = sb.toString();
+                                String[] kvs = s.split(" ");
+                                if (kvs.length > 1)
+                                    t = new OpeningTag(kvs[0], java.util.Arrays.copyOfRange(kvs, 1, kvs.length));
+                                else
+                                    t = new OpeningTag(kvs[0]);
                             }
                         }
                     }

@@ -17,20 +17,8 @@ public class HTMLImgDemo {
             sb.append(in.nextLine()).append("\n");
         }
         String content = sb.toString();
-        HTMLScanner sc = new HTMLScanner(content);
-        Token t;
-        try {
-            while ((t = sc.nextToken()) != null) {
-                if (t instanceof OpeningTag)
-                    System.out.println((OpeningTag) t);
-                else if (t instanceof ClosingTag)
-                    System.out.println((ClosingTag) t);
-                else
-                    System.out.println(t);
-            }
-        } catch(java.io.IOException e) {
-            e.printStackTrace();
-        }
-    }
+        HTMLParser ps = new HTMLParser(content);
+        ps.parse();
+   }
 
 }

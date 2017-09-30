@@ -1,4 +1,4 @@
-package HTMLParser;
+package HTMLParser.Tokens;
 
 public class Content implements Token {
     
