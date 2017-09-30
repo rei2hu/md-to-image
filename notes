@@ -1,0 +1,43 @@
+Blocks: paragraphs, quotes, lists, headings, rules, code blocks
+    - can have sub blocks (block quotes can have headings paragraphs etc)
+    - can contain inline content (text, links, emphasized text, images etc)
+
+BLOCKS BEFORE INLINE
+    - paragraphs
+    - quotes
+    - lists
+    - headings
+    - rules
+    - code blocks
+    
+Leaf Blocks:
+    Thematic breaks: 0-3 spaces followed by 3+ _, -, or *
+        - spaces allowed in between
+        - only allow spaces and the single thematic break character
+        - does not need empty line before or after
+        - can be in paragraph
+        - IMPORTANT: IF POSSIBLE SETEXT HEADING THEN IT IS A SETEXT HEADING
+        - IMPORTANT: TAKES PRECEDENCE OVER LIST
+            - confusing, see example 31 in spec
+
+    ATX headings: 1-6 # followed by space followed by text 
+                  optionally followed by space and more #
+        - strip spaces for content
+        - content is INLINE: ATX -> INLINE NODES
+        - up to 3 spaces before the start of #
+        - content ends with last character (see ex 44)
+        - can be in paragraph
+        - doesnt need empty line before or after
+        - can be EMPTY
+
+    Setext headings: 1+ lines of text, with one non whitespace
+                     no more than 3 space indent
+
+
+
+
+
+
+
+
+
