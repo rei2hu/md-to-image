@@ -2,10 +2,15 @@ package HTMLParser;
 
 public class Content implements Token {
     
-    String content;
+    private String content;
 
     public Content(String contents) {
         content = contents;
+    }
+
+    // hm literally same as tostring
+    public String getContent() {
+        return content;
     }
 
     public String toString() {
