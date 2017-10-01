@@ -8,4 +8,7 @@ class unknown extends BlockTagNode {
         type = name;
     }
 
+    public String toString() {
+        return "<" + type + ">" + content + "</" + type + ">";
+    }
 }

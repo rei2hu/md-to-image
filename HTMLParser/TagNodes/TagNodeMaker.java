@@ -7,10 +7,14 @@ public class TagNodeMaker {
     }
 
     public TagNode makeNode(String nodeType) {
+        return makeNode(nodeType, "");
+    }
+
+    public TagNode makeNode(String nodeType, String content) {
         TagNode n;
         switch(nodeType) {
             case "p":
-                n = new hr();
+                n = new p();
                 break;
             case "u":
                 n = new u();
@@ -26,6 +30,9 @@ public class TagNodeMaker {
                 break;
             case "hr":
                 n = new hr();
+                break;
+            case "content":
+                n = new content(content);
                 break;
             default:
                 n = new unknown(nodeType);

@@ -15,18 +15,15 @@ public class HTMLParser {
         tnm = new TagNodeMaker();
     }
 
-    public TagNode parse() throws Exception {
+    public HTMLParseTree parse() throws Exception {
         verifyTagsMatch();
-        System.out.println("ASD");
-        TagNode node = new RootNode();
-        node.setLeft(parse2(node));
-        node.setRight(parse2(node));
+        TagNode node = parse2(null);
         try {
             sc.close();
         } catch(java.io.IOException e) {
 
         }
-        return node;
+        return new HTMLParseTree(node);
     }
 
     private TagNode parse2(TagNode node) {
@@ -37,26 +34,29 @@ public class HTMLParser {
             e.printStackTrace();
             return null;
         }
-        if (t == null || t instanceof ClosingTag) return null;
+        if (t == null) return null;
         if (t instanceof OpeningTag) {
             TagNode n = tnm.makeNode(((Tag) t).getTagName());
             n.setLeft(parse2(n));
             n.setRight(parse2(n));
             return n;
+        } else if (t instanceof ClosingTag) {
+            return null;
         } else if (t instanceof StandaloneTag) {
             TagNode n = tnm.makeNode(((Tag) t).getTagName());
             n.setLeft(null); // should NOT have left
             n.setRight(parse2(n));
             return n;
-        } else {
-            node.addContent(t.toString());
-            return parse2(node);
+        } else { // content
+            TagNode n = tnm.makeNode("content", t.toString());
+            n.setLeft(null);
+            n.setRight(parse2(n));
+            return n;
         }
     }
 
     private void verifyTagsMatch() throws Exception {
         HTMLScanner sc = this.sc.clone();
-        TagNode node = new RootNode();
         Stack<Tag> stack = new Stack<>();
         Token t;
         int indent = 0;

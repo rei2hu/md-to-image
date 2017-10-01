@@ -2,10 +2,10 @@ package HTMLParser.TagNodes;
 
 public class TagNode {
 
-    String content = "";
-    TagNode left;
-    TagNode right;
-    TagNode parent;
+    protected String content = "";
+    protected TagNode left;
+    protected TagNode right;
+    protected TagNode parent;
 
     public TagNode setLeft(TagNode l) {
         left = l;
@@ -34,12 +34,8 @@ public class TagNode {
         return parent;
     }
 
-    public void addContent(String stuff) {
-        content += stuff;
-    }
-
     public String toString() {
-        return content;
+        return "<BASE>" +  content + "</BASE>";
     }
 }
 
