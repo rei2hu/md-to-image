@@ -3,16 +3,60 @@ package HTMLParser;
 import java.util.Stack;
 
 import HTMLParser.Tokens.*;
+import HTMLParser.TagNodes.*;
 
 public class HTMLParser {
 
     private HTMLScanner sc;
+    private TagNodeMaker tnm;
 
     public HTMLParser(String s) {
         sc = new HTMLScanner(s);
+        tnm = new TagNodeMaker();
     }
 
-    public void parse() {
+    public TagNode parse() throws Exception {
+        verifyTagsMatch();
+        System.out.println("ASD");
+        TagNode node = new RootNode();
+        node.setLeft(parse2(node));
+        node.setRight(parse2(node));
+        try {
+            sc.close();
+        } catch(java.io.IOException e) {
+
+        }
+        return node;
+    }
+
+    private TagNode parse2(TagNode node) {
+        Token t;
+        try {
+            t = sc.nextToken();
+        } catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        if (t == null || t instanceof ClosingTag) return null;
+        if (t instanceof OpeningTag) {
+            TagNode n = tnm.makeNode(((Tag) t).getTagName());
+            n.setLeft(parse2(n));
+            n.setRight(parse2(n));
+            return n;
+        } else if (t instanceof StandaloneTag) {
+            TagNode n = tnm.makeNode(((Tag) t).getTagName());
+            n.setLeft(null); // should NOT have left
+            n.setRight(parse2(n));
+            return n;
+        } else {
+            node.addContent(t.toString());
+            return parse2(node);
+        }
+    }
+
+    private void verifyTagsMatch() throws Exception {
+        HTMLScanner sc = this.sc.clone();
+        TagNode node = new RootNode();
         Stack<Tag> stack = new Stack<>();
         Token t;
         int indent = 0;
@@ -20,29 +64,22 @@ public class HTMLParser {
             while ((t = sc.nextToken()) != null) {
                 if (t instanceof OpeningTag) {
                     stack.push((Tag) t);
-                    System.out.println(new String(new char[indent]).replace("\0", " ") + ((Tag) t).getTagName());
-                    indent += 4;
-                    // System.out.println((OpeningTag) t);
                 } else if (t instanceof ClosingTag) {
                     Tag s = stack.peek();
                     if (s.equals((Tag) t)) {
                         stack.pop();
-                        indent -= 4;
-                        System.out.println(new String(new char[indent]).replace("\0", " ") + s.getTagName());
                     } else {
-                        System.out.println(s.getTagName() + " " + ((Tag) t).getTagName());
-                        throw new Error("Improperly formatted tags " + t);
+                        throw new Exception(String.format("Expected %s but got %s", s, (Tag) t));
                     }
-                    // System.out.println((ClosingTag) t);
                 } else if (t instanceof StandaloneTag ){
-                    // System.out.println((StandaloneTag) t);
-                    // just append to the right
+                    // no need to match
                 } else {
-                    System.out.println(new String(new char[indent]).replace("\0", " ") + t);
+                    // no need to match
                 }
             }
-        } catch(java.lang.Exception e) {
-            e.printStackTrace();
+            sc.close();
+        } catch(java.io.IOException e) {
+            throw new Exception(e.getMessage()); 
         }
     }
 

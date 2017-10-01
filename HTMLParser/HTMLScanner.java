@@ -12,16 +12,18 @@ public class HTMLScanner {
 
     private Reader scanner;
     private StringBuilder sb;
+    private String s;
 
     public HTMLScanner(String s) {
         scanner = new BufferedReader(new StringReader(s));
+        this.s = s;
         sb = new StringBuilder();
     }
 
-    /**
-     * get the next token
-     * @return the next valid token (a tag block or whatever you call it)
-     */
+    public HTMLScanner clone() {
+        return new HTMLScanner(s);
+    }
+    
     public Token nextToken() throws java.io.IOException {
         int c;
         Token t;
@@ -87,5 +89,8 @@ public class HTMLScanner {
         return null;
     }
 
+    public void close() throws java.io.IOException {
+        scanner.close();
+    }
 
 }
