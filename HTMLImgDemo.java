@@ -18,7 +18,7 @@ public class HTMLImgDemo {
         }
         HTMLRenderer rndr = new HTMLRenderer(sb.toString());
         try {
-            rndr.createImage(1920, 1080);
+            rndr.createImage(1000, 5000);
         } catch(Exception e) {
             e.printStackTrace();
         }

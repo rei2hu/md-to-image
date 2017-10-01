@@ -13,6 +13,6 @@ public class unknown extends BlockTagNode {
     }
 
     public String toString() {
-        return "<" + type + ">" + content + "</" + type + ">";
+        return "<" + type + attributesString() + ">";
     }
 }

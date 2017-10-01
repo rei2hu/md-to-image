@@ -7,6 +7,6 @@ public class p extends BlockTagNode {
     }
 
     public String toString() {
-        return "<p>" + content + "</p>";
+        return "<p" + attributesString() + ">";
     }
 }

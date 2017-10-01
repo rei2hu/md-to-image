@@ -7,6 +7,6 @@ public class u extends InlineTagNode {
     }
 
     public String toString() {
-        return "<u>" + content + "</u>";
+        return "<u" + attributesString() + ">";
     }
 }

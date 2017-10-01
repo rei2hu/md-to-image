@@ -38,14 +38,18 @@ public class HTMLParser {
         }
         if (t == null) return null;
         if (t instanceof OpeningTag) {
-            TagNode n = tnm.makeNode(((Tag) t).getTagName());
+            Tag temp = (Tag) t;
+            TagNode n = tnm.makeNode(temp.getTagName());
+            n.setAttributes(temp.getAttributes());        
             n.setLeft(parse2(n));
             n.setRight(parse2(n));
             return n;
         } else if (t instanceof ClosingTag) {
             return null;
         } else if (t instanceof StandaloneTag) {
-            TagNode n = tnm.makeNode(((Tag) t).getTagName());
+            Tag temp = (Tag) t;
+            TagNode n = tnm.makeNode(temp.getTagName());
+            n.setAttributes(temp.getAttributes());
             n.setLeft(null); // should NOT have left
             n.setRight(parse2(n));
             return n;

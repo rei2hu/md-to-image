@@ -1,6 +1,6 @@
 test:
 	javac HTMLImgDemo.java
-	java HTMLImgDemo test.html
+	java HTMLImgDemo ./tests/test.html
 	mv test.jpg $(DESKTOP)
 clean:
 	rm *.class

@@ -1,11 +1,14 @@
 package HTMLParser.TagNodes;
 
+import HTMLParser.Tokens.Attributes;
+import HTMLParser.Tokens.Attribute;
+
 public class TagNode {
 
-    protected String content = "";
     protected TagNode left;
     protected TagNode right;
     protected TagNode parent;
+    protected Attributes attributes;
 
     public TagNode setLeft(TagNode l) {
         left = l;
@@ -22,6 +25,11 @@ public class TagNode {
         return this;
     }
 
+    public TagNode setAttributes(Attributes a) {
+        attributes = a;
+        return this;
+    }
+
     public TagNode getLeft() {
         return left;
     }
@@ -34,8 +42,22 @@ public class TagNode {
         return parent;
     }
 
+    public Attribute getAttribute(String key) {
+        return attributes.get(key);
+    }
+
+    public String attributesString() {
+        if (attributes == null) return "";
+
+        java.lang.StringBuilder sb = new java.lang.StringBuilder();
+        for (Attribute a: attributes) {
+            sb.append(" ").append(a.toString());
+        }
+        return sb.toString();
+    }
+
     public String toString() {
-        return "<BASE>" +  content + "</BASE>";
+        return "<TAGNODE" + attributesString() + ">";
     }
 }
 

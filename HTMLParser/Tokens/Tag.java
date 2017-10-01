@@ -1,8 +1,11 @@
 package HTMLParser.Tokens;
 
+import java.util.ArrayList;
+
 public class Tag implements Token {
     
     protected String tagName;
+    protected Attributes attributes = new Attributes();
 
     public Tag(String tag) {
         tagName = tag;
@@ -10,6 +13,10 @@ public class Tag implements Token {
 
     public String toString() {
         return tagName;
+    }
+
+    public Attributes getAttributes() {
+        return attributes;
     }
 
     public String getTagName() {

@@ -34,6 +34,9 @@ public class TagNodeMaker {
             case "content":
                 n = new content(content);
                 break;
+            case "img":
+                n = new img();
+                break;
             default:
                 n = new unknown(nodeType);
         }

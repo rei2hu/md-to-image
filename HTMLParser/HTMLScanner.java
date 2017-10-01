@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import HTMLParser.Tokens.*;
 
-public class HTMLScanner {
+class HTMLScanner {
 
     private Reader scanner;
     private StringBuilder sb;
