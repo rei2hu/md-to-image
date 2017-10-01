@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class StandaloneTag extends Tag {
    
-    ArrayList<Attributes> attributes;
+    private ArrayList<Attributes> attributes;
     
     public StandaloneTag(String tag) {
         super(tag);

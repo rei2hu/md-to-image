@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class OpeningTag extends Tag {
 
-    ArrayList<Attributes> attributes;
+    private ArrayList<Attributes> attributes;
 
     public OpeningTag(String tag) {
         super(tag);

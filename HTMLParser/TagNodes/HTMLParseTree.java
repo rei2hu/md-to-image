@@ -4,7 +4,7 @@ import java.lang.StringBuilder;
 
 public class HTMLParseTree {
     
-    TagNode root;
+    private TagNode root;
 
     public HTMLParseTree(TagNode root) {
         this.root = root;

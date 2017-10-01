@@ -2,7 +2,7 @@ package HTMLParser.TagNodes;
 
 class content extends InlineTagNode {
 
-    String content = "";
+    private String content = "";
 
     public content(String s) {
         content = s;
