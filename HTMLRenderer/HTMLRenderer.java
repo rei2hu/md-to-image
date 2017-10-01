@@ -37,11 +37,12 @@ public class HTMLRenderer {
     private boolean undl = false;
     private boolean bold = false;
     private boolean lipadding = false;
+    private boolean inlineNext = false;
 
+    private Cursor cursor;
     // s is the html string
     public HTMLRenderer(String s) {
         ps = new HTMLParser(s);
-        underline.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
     }
 
     private void makeTree() throws Exception {
@@ -50,12 +51,13 @@ public class HTMLRenderer {
 
     public void createImage(int width, int height) throws Exception {
         makeTree();
-        this.width = width;
+        // height should be something
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         g = image.getGraphics();
-        metrics = g.getFontMetrics(defaultFont.getFont());
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, width, height);
+        cursor = new Cursor(image, 15, 15);
+        metrics = g.getFontMetrics();
         traverse(hpt.getRoot()); 
         
         ImageIO.write(image, "jpg", new File("test.jpg"));
@@ -98,11 +100,14 @@ public class HTMLRenderer {
     }
 
     private void drawNode(img node) {
+        
         // this has quotes on it for some reason
         String url = node.getAttribute("src").getValue();
         // missing protocol or something idk
         url = "http:" + url.substring(1, url.length() - 1); 
-        System.out.println(url);
+        cursor.drawImage(url);
+        /*
+        // System.out.println(url);
         BufferedImage image = null;
         try {
             image = ImageIO.read(new URL(url));
@@ -111,10 +116,11 @@ public class HTMLRenderer {
         }
         // need to scale image down to minimum width but do later
         if (image != null)
-            g.drawImage(image, 15, textLineOffset, image.getWidth(), image.getHeight(), null);
+            // g.drawImage(image, 15, textLineOffset, image.getWidth(), image.getHeight(), null);
         // else
             // put error loading image picture
         textLineOffset += image.getHeight() + 15;
+        */
     }
 
     private void drawNode(unknown node) {
@@ -132,7 +138,8 @@ public class HTMLRenderer {
     }
 
     private void drawNode(content node, int spaces) {
-
+        cursor.writeText(node.toString(), false, spaces);
+        /*
         g.setFont(defaultFont.getFont());
         g.setColor(defaultFont.getColor());
 
@@ -161,6 +168,7 @@ public class HTMLRenderer {
         }
         lipadding = bold = undl = false;
         textLineOffset += 15; 
+        */
     }
 
     private void drawNode(hr node) {
@@ -168,18 +176,12 @@ public class HTMLRenderer {
         // - 6.5 (minus half of font size)
         // - 30 for width
         // height very low
-        g.setColor(Color.GRAY);
-        g.fillRect(10 + 5, textLineOffset - 6, 1000 - 30, 1);
-        textLineOffset += 15;
+        cursor.drawLine(1);
     }
 
     private void drawNode(li node, int spaces) {
         // in middleish need to consider rectangle size also
-        g.setColor(Color.BLACK);
-        // very arbitrary number to multiply by spaces
-        // figure out later
-        g.fillRect(spaces * spaceWidth() + 10 + 5, textLineOffset - 6, 3, 3);
-        lipadding = true;
+        cursor.drawBullet(spaces, 4);
     }
 
     private void drawNode(p node) {
@@ -187,16 +189,16 @@ public class HTMLRenderer {
     }
     
     private void drawNode(strong node) {
-        bold = true;
+        bold = inlineNext = true;
     }
     
     private void drawNode(u node) {
         // java plz
-        undl = true;
+        undl = inlineNext = true;
     }
 
     private void drawNode(ul node) {
-        textLineOffset += 15;
+    
     }
 
     // traverse and draw
