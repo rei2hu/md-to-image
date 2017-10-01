@@ -3,7 +3,9 @@ package HTMLParser;
 import java.util.Stack;
 
 import HTMLParser.Tokens.*;
-import HTMLParser.TagNodes.*;
+import HTMLParser.TagNodes.TagNode;
+import HTMLParser.TagNodes.HTMLParseTree;
+import HTMLParser.TagNodes.TagNodeMaker;
 
 public class HTMLParser {
 

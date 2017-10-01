@@ -1,6 +1,6 @@
 package HTMLParser.TagNodes;
 
-class u extends InlineTagNode {
+public class u extends InlineTagNode {
 
     public u() {
 

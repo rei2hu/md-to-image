@@ -10,6 +10,10 @@ public class HTMLParseTree {
         this.root = root;
     }
 
+    public TagNode getRoot() {
+        return root;
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         traverse(root, 0, sb);

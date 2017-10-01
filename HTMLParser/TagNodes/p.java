@@ -1,6 +1,6 @@
 package HTMLParser.TagNodes;
 
-class p extends BlockTagNode {
+public class p extends BlockTagNode {
 
     public p() {
         

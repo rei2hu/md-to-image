@@ -2,8 +2,7 @@ import java.lang.StringBuilder;
 import java.io.File;
 import java.util.Scanner;
 
-import HTMLParser.*;
-import HTMLParser.TagNodes.HTMLParseTree;
+import HTMLRenderer.HTMLRenderer;
 
 public class HTMLImgDemo {
 
@@ -17,16 +16,12 @@ public class HTMLImgDemo {
         while (in.hasNextLine()) {
             sb.append(in.nextLine()).append("\n");
         }
-        String content = sb.toString();
-        HTMLParser ps = new HTMLParser(content);
-        HTMLParseTree hpt; 
+        HTMLRenderer rndr = new HTMLRenderer(sb.toString());
         try {
-            hpt = ps.parse();
-        } catch(java.lang.Exception e) {
+            rndr.createImage(1920, 1080);
+        } catch(Exception e) {
             e.printStackTrace();
-            return;
         }
-        System.out.println(hpt);
     }
 
 }

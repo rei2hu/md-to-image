@@ -1,6 +1,6 @@
 package HTMLParser.TagNodes;
 
-class content extends InlineTagNode {
+public class content extends InlineTagNode {
 
     private String content = "";
 

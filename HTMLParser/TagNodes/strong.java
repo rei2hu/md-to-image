@@ -1,6 +1,6 @@
 package HTMLParser.TagNodes;
 
-class strong extends InlineTagNode {
+public class strong extends InlineTagNode {
 
     public strong() {
 

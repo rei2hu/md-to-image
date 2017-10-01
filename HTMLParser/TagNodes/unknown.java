@@ -1,6 +1,6 @@
 package HTMLParser.TagNodes;
 
-class unknown extends BlockTagNode {
+public class unknown extends BlockTagNode {
     
     private String type;
 
