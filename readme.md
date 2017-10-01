@@ -24,3 +24,6 @@ TODO:
     * Other aesthetic options
 * Other
     * Documentation
+
+Example of current output:
+![test](tests/test.jpg)
