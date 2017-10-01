@@ -46,6 +46,10 @@ public class TagNode {
         return attributes.get(key);
     }
 
+    public boolean isInline() {
+        return false;
+    }
+
     public String attributesString() {
         if (attributes == null) return "";
 
