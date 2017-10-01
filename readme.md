@@ -10,9 +10,17 @@ One possible solution is to use [Puppeteer](https://github.com/GoogleChrome/pupp
 So enter this. A super stripped html parser and renderer. Eh I'm still working on it.
 
 TODO:
-* Replace entities in content
-* Automatically extend height of picture if not enough space
-* Make renderer render better
-* Render images
-* Add handling for more tags
-* Documentation
+* Parsing
+    * Handle *empty* tags
+    * Replace entities in content
+    * Add handling for more tags
+* Rendering
+    * Determine image height automatically
+    * Make renderer render better
+    * Handle inline content properly
+    * Organization improvements
+    * Scale inner images based on width
+    * Font options
+    * Other aesthetic options
+* Other
+    * Documentation
