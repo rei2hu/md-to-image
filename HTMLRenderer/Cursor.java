@@ -43,12 +43,30 @@ public class Cursor {
         image = i;
         g = image.getGraphics();
         metrics = g.getFontMetrics();
+        
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, image.getWidth(), image.getHeight());
 
         x_offset = horizPad;
-        y_offset = vertPad + wordHeight();
+        y_offset(vertPad + wordHeight());
 
         g.setFont(font);
         g.setColor(color);
+    }
+
+    private void y_offset(int y) {
+        y_offset = y;
+        if (y_offset + wordHeight() > image.getHeight()) {
+            BufferedImage temp = image;
+            image = new BufferedImage(temp.getWidth(), (int) (y_offset * 1.5), 
+                BufferedImage.TYPE_INT_RGB);
+            g = image.getGraphics();
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0, image.getWidth(), image.getHeight());
+            g.drawImage(temp, 0, 0, temp.getWidth(), temp.getHeight(), null);
+            g.setColor(color);
+            g.setFont(font);
+        }
     }
 
     private int spaceWidth() {
@@ -73,26 +91,31 @@ public class Cursor {
             height = (int) (height / scalingFactor);
             width = (int) (width / scalingFactor);
         }
+        int temp = y_offset; 
+        y_offset(y_offset + wordHeight() + yPad + height);
         if (image != null)
-            g.drawImage(image, xPad, y_offset, width, height, null);
+            g.drawImage(image, xPad, temp, width, height, null);
         else
             System.out.println("couldnt ge timage");
-        y_offset += wordHeight() + yPad + height;
     }
 
     public void drawBullet(int spaces, int size) {
         Color temp = g.getColor();
         g.setColor(Color.BLACK);
-        g.fillRect(xPad + (spaces + 10) * spaceWidth(), y_offset - ((wordHeight() - size)/ 2), size, size);
-        x_offset = (spaces + 10) * spaceWidth() + xPad + spaceWidth() + size + 3;
+        g.fillRect(xPad + (spaces) * spaceWidth(), y_offset - ((wordHeight() - size)/ 2), size, size);
+        x_offset = (spaces) * spaceWidth() + xPad + spaceWidth() + size + 3;
         list = true;
+    }
+
+    public BufferedImage getImage() {
+        return image.getSubimage(0, 0, image.getWidth(), y_offset + yPad);
     }
 
     public void drawLine(int width) {
         Color temp = g.getColor();
         g.setColor(Color.GRAY);
-        g.fillRect(xPad, y_offset - (wordHeight() / 2), image.getWidth() - xPad, width);
-        y_offset += wordHeight() + xPad;
+        g.fillRect(xPad, y_offset - (wordHeight() / 2), image.getWidth() -  2 * xPad, width);
+        y_offset(y_offset + wordHeight() + xPad);
         g.setColor(temp);
     }
    
@@ -104,7 +127,24 @@ public class Cursor {
         strong = true;
     }
 
-    public void writeText(String text, boolean inline, int spaces) {
+    public void lineBreak(int spaces) {
+        y_offset(y_offset + yPad + wordHeight());
+        resetX(spaces);
+    }
+
+    public void miniBreak(int spaces) {
+        y_offset(y_offset + yPad);
+        resetX(spaces);
+    }
+
+    public void resetX(int spaces) {
+        x_offset = xPad + spaces * spaceWidth();
+    }
+
+    public void writeText(String text, int inline, int spaces) {
+        
+        // System.out.println("[" + inline + "] " + text);
+
         Font temp = g.getFont();
         if (strong)
             g.setFont(g.getFont().deriveFont(Font.BOLD));
@@ -112,6 +152,7 @@ public class Cursor {
             g.setFont(g.getFont().deriveFont(underline));
 
         u = strong = false;
+
         String[] words = text.split(" ");
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
@@ -119,26 +160,13 @@ public class Cursor {
         int startX = x_offset;
         int startY = y_offset;
         int index = 0;
-        // System.out.printf("Started on x=%d, y=%d inline=%b \n", x_offset, y_offset, inline);
         String line = "";
-        /*
-        if (inline) {
-            line = words[index++];
-            while ((index < words.length) && 
-                (metrics.stringWidth(line + " " + words[index])) < image.getWidth() - startX - xPad) {
-                    line = line + " " + words[index++];
-                }
-            g.drawString(line, startX, startY);
-            startY += wordHeight() + yPad;
-            startX += metrics.stringWidth(line);
-        }
-        line = "";
-        
-        if (!inline || (index < words.length && metrics.stringWidth(line + " " + words[index]) >= image.getWidth() - startX - xPad))
-        */
-        if (!list)
+        if (!list && inline == 0)
             startX = xPad + spaces * spaceWidth();
+        if (inline > 0)
+            startY -= (yPad + wordHeight());
         list = false;
+        // System.out.printf("start x=%d, y=%d\n", startX, startY);
         while (index < words.length) {
             line = words[index++];
             while ((index < words.length) && 
@@ -146,11 +174,14 @@ public class Cursor {
                     line = line + " " + words[index++];
                 }    
             g2d.drawString(line, startX, startY);
+            y_offset(y_offset + wordHeight() + yPad);
             startY += wordHeight() + yPad;
             startX = xPad + spaces * spaceWidth();
         }
-        x_offset = startX; // + metrics.stringWidth(line);
-        y_offset = startY; // startY - wordHeight() - yPad;
+        x_offset += metrics.stringWidth(line) + startX;
+        // can break here if too much content
+        y_offset(startY); // startY - wordHeight() - yPad;
+        // System.out.printf("end   x=%d, y=%d\n", x_offset, y_offset);
         g.setFont(temp);
     }
 

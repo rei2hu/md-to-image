@@ -1,3 +1,5 @@
+# html to image
+
 I had the sudden need to send lots of md and html
 to a service with a 2000 character limit (yes Discord).
 
@@ -15,15 +17,13 @@ TODO:
     * Replace entities in content
     * Add handling for more tags
 * Rendering
-    * Determine image height automatically
     * Make renderer render better
-    * Handle inline content properly
+    * Remove extra spaces from inline content
     * Organization improvements
-    * Scale inner images based on width
     * Font options
     * Other aesthetic options
 * Other
     * Documentation
 
-Example of current output:
+# Example of current output:
 ![test](tests/test.jpg)

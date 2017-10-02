@@ -6,15 +6,10 @@ import java.io.File;
 import java.lang.StringBuilder;
 import java.io.IOException;
 
-import java.net.URL;
-
 import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.font.TextAttribute;
-import java.awt.FontMetrics;
-
 import javax.imageio.ImageIO;
 
 import HTMLParser.*;
@@ -30,7 +25,8 @@ public class HTMLRenderer {
     private Graphics g;
 
     private int modifier = 0;
-    private boolean inlineNext = false;
+    private int inlineNext = 0;
+    private boolean justBroke = false;
 
     private Cursor cursor;
     
@@ -45,14 +41,14 @@ public class HTMLRenderer {
     public void createImage(int width, String path) throws Exception {
         makeTree();
         // height should be something
-        image = new BufferedImage(width, 5000, BufferedImage.TYPE_INT_RGB);
-        g = image.getGraphics();
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, width, height);
+        int height = 100;
+        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        // g = image.getGraphics();
+        // g.setColor(Color.WHITE);
+        // g.fillRect(0, 0, width, height);
         cursor = new Cursor(image, 15, 15);
         traverse(hpt.getRoot()); 
-        
-        ImageIO.write(image, "jpg", new File(path));
+        ImageIO.write(cursor.getImage(), "jpg", new File(path));
     }
 
     private void traverse(TagNode node) {
@@ -70,49 +66,37 @@ public class HTMLRenderer {
     private void drawNode(TagNode node, int spaces) {
         // for (int i = 0; i < spaces; i++) System.out.print(" ");
         // System.out.println(node);
+        
         if (node instanceof content) {
             drawNode((content) node, spaces);
-        } else if (node instanceof hr) {
-            drawNode((hr) node);
-        } else if (node instanceof li) {
-            drawNode((li) node, spaces);
-        } else if (node instanceof p) {
-            drawNode((p) node);
-        } else if (node instanceof strong) {
-            drawNode((strong) node);
-        } else if (node instanceof u) {
-            drawNode((u) node);
-        } else if (node instanceof ul) {
-            drawNode((ul) node);
-        } else if (node instanceof img){
-            drawNode((img) node);
-        } else { // unknown
-            drawNode((unknown) node);
+        } else {
+            inlineNext = 0;
+            if (node instanceof hr) {
+                drawNode((hr) node);
+            } else if (node instanceof li) {
+                drawNode((li) node, spaces);
+            } else if (node instanceof p) {
+                drawNode((p) node, spaces);
+            } else if (node instanceof strong) {
+                drawNode((strong) node);
+            } else if (node instanceof u) {
+                drawNode((u) node);
+            } else if (node instanceof ul) {
+                drawNode((ul) node, spaces);
+            } else if (node instanceof img){
+                drawNode((img) node);
+            } else { // unknown
+                drawNode((unknown) node);
+            }
         }
     }
 
     private void drawNode(img node) {
-        
         // this has quotes on it for some reason
         String url = node.getAttribute("src").getValue();
         // missing protocol or something idk
         url = "http:" + url.substring(1, url.length() - 1); 
         cursor.drawImage(url);
-        /*
-        // System.out.println(url);
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(new URL(url));
-        } catch(IOException e) {
-            System.out.println(e); 
-        }
-        // need to scale image down to minimum width but do later
-        if (image != null)
-            // g.drawImage(image, 15, textLineOffset, image.getWidth(), image.getHeight(), null);
-        // else
-            // put error loading image picture
-        textLineOffset += image.getHeight() + 15;
-        */
     }
 
     private void drawNode(unknown node) {
@@ -120,8 +104,9 @@ public class HTMLRenderer {
     }
 
     private void drawNode(content node, int spaces) {
-        cursor.writeText(node.toString(), false, spaces + modifier);
+        cursor.writeText(node.toString(), inlineNext, spaces + modifier);
         modifier = 0;
+        inlineNext = Math.max(inlineNext - 1, 0);
     }
 
     private void drawNode(hr node) {
@@ -132,22 +117,26 @@ public class HTMLRenderer {
         cursor.drawBullet(spaces, 4);
     }
 
-    private void drawNode(p node) {
+    private void drawNode(p node, int spaces) {
+        cursor.lineBreak(spaces);
+        // cursor.resetX(spaces);
     }
     
     private void drawNode(strong node) {
         modifier -= 4;
         cursor.setBold();
-        inlineNext = true;
+        inlineNext = 2;
     }
     
     private void drawNode(u node) {
         modifier -= 4;
         cursor.setUnderline();
-        inlineNext = true;
+        inlineNext = 2;
     }
 
-    private void drawNode(ul node) {
+    private void drawNode(ul node, int spaces) {
+        cursor.lineBreak(spaces);
+        // cursor.resetX(spaces);
     }
 
     // traverse and draw
