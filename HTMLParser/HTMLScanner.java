@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.StringReader;
 import java.lang.StringBuilder;
 import java.io.Reader;
-import java.util.ArrayList;
 
 import HTMLParser.Tokens.*;
 
@@ -14,7 +13,7 @@ class HTMLScanner {
     private StringBuilder sb;
     private String s;
 
-    public HTMLScanner(String s) {
+    HTMLScanner(String s) {
         scanner = new BufferedReader(new StringReader(s));
         this.s = s;
         sb = new StringBuilder();
@@ -24,7 +23,7 @@ class HTMLScanner {
         return new HTMLScanner(s);
     }
     
-    public Token nextToken() throws java.io.IOException {
+    Token nextToken() throws java.io.IOException {
         int c;
         Token t;
         // hmm
@@ -89,7 +88,7 @@ class HTMLScanner {
         return null;
     }
 
-    public void close() throws java.io.IOException {
+    void close() throws java.io.IOException {
         scanner.close();
     }
 

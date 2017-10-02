@@ -10,8 +10,8 @@ public class StandaloneTag extends Tag {
     
     public StandaloneTag(String tag, String[] atrs) {
         super(tag);
-        for (int i = 0; i < atrs.length; i++) {
-            String[] kv = atrs[i].split("=", 2);
+        for (String s: atrs) {
+            String[] kv = s.split("=", 2);
             if (kv.length >= 2)
                 attributes.add(kv[0], kv[1]);
             else

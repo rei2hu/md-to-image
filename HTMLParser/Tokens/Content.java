@@ -8,7 +8,6 @@ public class Content implements Token {
         content = contents;
     }
 
-    // hm literally same as tostring
     public String getContent() {
         return content;
     }

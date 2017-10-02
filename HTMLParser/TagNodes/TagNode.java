@@ -5,10 +5,10 @@ import HTMLParser.Tokens.Attribute;
 
 public class TagNode {
 
-    protected TagNode left;
-    protected TagNode right;
-    protected TagNode parent;
-    protected Attributes attributes;
+    private TagNode left;
+    private TagNode right;
+    private TagNode parent;
+    private Attributes attributes;
 
     public TagNode setLeft(TagNode l) {
         left = l;
@@ -46,11 +46,7 @@ public class TagNode {
         return attributes.get(key);
     }
 
-    public boolean isInline() {
-        return false;
-    }
-
-    public String attributesString() {
+    String attributesString() {
         if (attributes == null) return "";
 
         java.lang.StringBuilder sb = new java.lang.StringBuilder();

@@ -8,7 +8,7 @@ public class Attributes implements java.lang.Iterable<Attribute> {
 
    private Hashtable<String, Attribute> attributes;
 
-    public Attributes() {
+    Attributes() {
         attributes = new Hashtable<>();
     }
 
@@ -24,7 +24,7 @@ public class Attributes implements java.lang.Iterable<Attribute> {
         return sb.toString();
     }
 
-    public void add(String key, String value) {
+    void add(String key, String value) {
         Attribute a = new Attribute(key, value);
         attributes.put(key, a);
     }
