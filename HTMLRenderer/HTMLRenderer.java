@@ -27,20 +27,13 @@ public class HTMLRenderer {
     private HTMLParseTree hpt;
     private HTMLParser ps;
 
-    private int textLineOffset = 0;
-    private FontSettings defaultFont = new FontSettings();
-    private Map<TextAttribute, Object> underline = new Hashtable<>();
-    private FontMetrics metrics;
     private Graphics g;
 
-    private int width = 0;
-    private boolean undl = false;
-    private boolean bold = false;
-    private boolean lipadding = false;
+    private int modifier = 0;
     private boolean inlineNext = false;
 
     private Cursor cursor;
-    // s is the html string
+    
     public HTMLRenderer(String s) {
         ps = new HTMLParser(s);
     }
@@ -49,18 +42,17 @@ public class HTMLRenderer {
         hpt = ps.parse();
     }
 
-    public void createImage(int width, int height) throws Exception {
+    public void createImage(int width, String path) throws Exception {
         makeTree();
         // height should be something
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(width, 5000, BufferedImage.TYPE_INT_RGB);
         g = image.getGraphics();
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, width, height);
         cursor = new Cursor(image, 15, 15);
-        metrics = g.getFontMetrics();
         traverse(hpt.getRoot()); 
         
-        ImageIO.write(image, "jpg", new File("test.jpg"));
+        ImageIO.write(image, "jpg", new File(path));
     }
 
     private void traverse(TagNode node) {
@@ -127,78 +119,35 @@ public class HTMLRenderer {
         // wee
     }
 
-    // pad with spaces
-
-    private int calculateLeftPadding(int spaces) {
-        return metrics.stringWidth(new String(new char[spaces]).replace("\0", " ")); 
-    }
-
-    private int spaceWidth() {
-        return metrics.stringWidth(" ");
-    }
-
     private void drawNode(content node, int spaces) {
-        cursor.writeText(node.toString(), false, spaces);
-        /*
-        g.setFont(defaultFont.getFont());
-        g.setColor(defaultFont.getColor());
-
-        if (bold)
-            g.setFont(new Font("Times New Roman", Font.BOLD, 13));
-        if (undl)
-            g.setFont(defaultFont.getFont().deriveFont(underline));    
-        if (lipadding)
-            spaces += 1;
-
-        metrics = g.getFontMetrics(defaultFont.getFont());
-        
-        int height = metrics.getHeight();
-        String[] words = node.toString().split(" ");
-        int startX = calculateLeftPadding(spaces);
-        int startY = textLineOffset;
-        int rightPadding = 5;
-        int index = 0;
-        while (index < words.length) {
-            String line = words[index++];
-            while ((index < words.length) && (metrics.stringWidth(line + " " + words[index]) < width - startX - rightPadding)) {
-                line = line + " " + words[index++];
-            }
-            g.drawString(line, startX, startY);
-            startY += height;
-        }
-        lipadding = bold = undl = false;
-        textLineOffset += 15; 
-        */
+        cursor.writeText(node.toString(), false, spaces + modifier);
+        modifier = 0;
     }
 
     private void drawNode(hr node) {
-        // + 5 padding
-        // - 6.5 (minus half of font size)
-        // - 30 for width
-        // height very low
         cursor.drawLine(1);
     }
 
     private void drawNode(li node, int spaces) {
-        // in middleish need to consider rectangle size also
         cursor.drawBullet(spaces, 4);
     }
 
     private void drawNode(p node) {
-        textLineOffset += 15; // skip a line or something i guess
     }
     
     private void drawNode(strong node) {
-        bold = inlineNext = true;
+        modifier -= 4;
+        cursor.setBold();
+        inlineNext = true;
     }
     
     private void drawNode(u node) {
-        // java plz
-        undl = inlineNext = true;
+        modifier -= 4;
+        cursor.setUnderline();
+        inlineNext = true;
     }
 
     private void drawNode(ul node) {
-    
     }
 
     // traverse and draw

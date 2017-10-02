@@ -95,14 +95,23 @@ public class Cursor {
         y_offset += wordHeight() + xPad;
         g.setColor(temp);
     }
-    
+   
+    public void setUnderline() {
+        u = true;
+    }
+
+    public void setBold() {
+        strong = true;
+    }
+
     public void writeText(String text, boolean inline, int spaces) {
-        
+        Font temp = g.getFont();
         if (strong)
             g.setFont(g.getFont().deriveFont(Font.BOLD));
         if (u)
             g.setFont(g.getFont().deriveFont(underline));
 
+        u = strong = false;
         String[] words = text.split(" ");
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
@@ -142,7 +151,7 @@ public class Cursor {
         }
         x_offset = startX; // + metrics.stringWidth(line);
         y_offset = startY; // startY - wordHeight() - yPad;
-        // System.out.printf("Ended on x=%d, y=%d \n", x_offset, y_offset);
+        g.setFont(temp);
     }
 
     public void underlineNext() {
