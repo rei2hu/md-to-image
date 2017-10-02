@@ -138,7 +138,6 @@ public class Cursor {
     public void writeText(String text, int spaces) {
         
         // System.out.println("[" + spaces + "] " + text);
-
         Font temp = g.getFont();
         if (strong)
             g.setFont(g.getFont().deriveFont(Font.BOLD));
@@ -148,7 +147,8 @@ public class Cursor {
         metrics = g.getFontMetrics();
         u = strong = false;
 
-        String[] words = text.split(" ");
+        String[] words = text.split(" ", -1);
+        // System.out.println(java.util.Arrays.toString(words));
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                              RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -173,7 +173,7 @@ public class Cursor {
         if (newline) // if moved to a new line
             x_offset = metrics.stringWidth(line) + startX;
         else
-            x_offset += metrics.stringWidth(line) + spaceWidth();
+            x_offset += metrics.stringWidth(line);
         // can break here if too much content
         y_offset(startY - wordHeight() - yPad); // startY - wordHeight() - yPad;
         // System.out.printf("end   x=%d, y=%d\n", x_offset, y_offset);
