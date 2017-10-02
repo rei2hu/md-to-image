@@ -74,18 +74,19 @@ public class HTMLRenderer {
             // cursor.lineBreak(spaces);
             drawNode(node.getRight(), spaces);
         } else if (node instanceof p) {
+            cursor.lineBreak(spaces);
             drawNode(node.getLeft(), spaces);
             cursor.lineBreak(spaces);
             drawNode(node.getRight(), spaces);
         } else if (node instanceof strong) {
             // this is inline, technically a content node
             drawNode((strong) node);
-            drawNode(node.getLeft(), spaces); // content
+            drawNode(node.getLeft(), 0); // content
             drawNode(node.getRight(), spaces);
         } else if (node instanceof u) {
             // this is also inline, technically a content node
             drawNode((u) node);
-            drawNode(node.getLeft(), spaces); // content
+            drawNode(node.getLeft(), 0); // content
             drawNode(node.getRight(), spaces);
         } else if (node instanceof ul) {
             // cursor.lineBreak(spaces);
@@ -107,7 +108,6 @@ public class HTMLRenderer {
         String url = node.getAttribute("src").getValue();
         // missing protocol or something idk
         url = "http:" + url.substring(1, url.length() - 1); 
-        System.out.println(url);
         cursor.drawImage(url);
     }
 

@@ -28,7 +28,7 @@ public class Cursor {
 
     private BufferedImage image;
     private FontMetrics metrics;
-    private Font font = new Font("Times New Roman", Font.PLAIN, 12);
+    private Font font = new Font("Times New Roman", Font.PLAIN, 16);
     private Color color = Color.BLACK;
     private Graphics g;
 
@@ -104,7 +104,6 @@ public class Cursor {
         g.setColor(Color.BLACK);
         g.fillRect(xPad + (spaces) * spaceWidth(), y_offset - ((wordHeight() - size)/ 2), size, size);
         x_offset = (spaces) * spaceWidth() + xPad + spaceWidth() + size + 3;
-        list = true;
     }
 
     public BufferedImage getImage() {
@@ -138,7 +137,7 @@ public class Cursor {
 
     public void writeText(String text, int spaces) {
         
-        // System.out.println("[" + inline + "] " + text);
+        // System.out.println("[" + spaces + "] " + text);
 
         Font temp = g.getFont();
         if (strong)
@@ -156,25 +155,30 @@ public class Cursor {
         int startX = x_offset;
         int startY = y_offset;
         int index = 0;
+        boolean newline = false;
         String line = ""; 
-        // System.out.println(spaces + text);
         // System.out.printf("start x=%d, y=%d\n", startX, startY);
         while (index < words.length) {
             line = words[index++];
             while ((index < words.length) && 
                 (metrics.stringWidth(line + " " + words[index])) < image.getWidth() - startX - xPad) {
                     line = line + " " + words[index++];
-                }    
+                }
+            newline = newline || index < words.length;
             g2d.drawString(line, startX, startY);
             y_offset(y_offset + wordHeight() + yPad);
             startY += wordHeight() + yPad; 
             startX = spaces * spaceWidth() + xPad;
         }
-        x_offset += metrics.stringWidth(line) + startX + spaceWidth();
+        if (newline) // if moved to a new line
+            x_offset = metrics.stringWidth(line) + startX;
+        else
+            x_offset += metrics.stringWidth(line) + spaceWidth();
         // can break here if too much content
         y_offset(startY - wordHeight() - yPad); // startY - wordHeight() - yPad;
         // System.out.printf("end   x=%d, y=%d\n", x_offset, y_offset);
         g.setFont(temp);
+        metrics = g.getFontMetrics();
     }
 
     public void underlineNext() {
