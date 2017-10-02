@@ -76,7 +76,7 @@ public class HTMLParser {
                 }
             }
         } catch(java.io.IOException e) {
-            throw new Exception(e.getMessage()); 
+            throw e;
         }
     }
 

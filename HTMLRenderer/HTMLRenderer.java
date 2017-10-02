@@ -43,16 +43,9 @@ public class HTMLRenderer {
         // height should be something
         int height = 100;
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        // g = image.getGraphics();
-        // g.setColor(Color.WHITE);
-        // g.fillRect(0, 0, width, height);
         cursor = new Cursor(image, xPad, yPad);
-        draw(hpt.getRoot()); 
+        drawNode(hpt.getRoot(), 0);
         ImageIO.write(cursor.getImage(), "jpg", new File(path));
-    }
-
-    private void draw(TagNode node) {
-        drawNode(node, 0);
     }
 
     private void drawNode(TagNode node, int spaces) {
@@ -96,7 +89,8 @@ public class HTMLRenderer {
         } else if (node instanceof img){
             drawNode((img) node);
             drawNode(node.getRight(), spaces);
-        } else { // unknown
+        } else if (node instanceof unknown){ // unknown
+            System.out.println("Encountered unknown node (" + ((unknown) node).getType() + ").");
             // drawNode((unknown) node);
             drawNode(node.getLeft(), spaces + 4);
             drawNode(node.getRight(), spaces);
