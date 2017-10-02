@@ -132,16 +132,11 @@ public class Cursor {
         resetX(spaces);
     }
 
-    public void miniBreak(int spaces) {
-        y_offset(y_offset + yPad);
-        resetX(spaces);
-    }
-
     public void resetX(int spaces) {
         x_offset = xPad + spaces * spaceWidth();
     }
 
-    public void writeText(String text, int inline, int spaces) {
+    public void writeText(String text, int spaces) {
         
         // System.out.println("[" + inline + "] " + text);
 
@@ -151,6 +146,7 @@ public class Cursor {
         if (u)
             g.setFont(g.getFont().deriveFont(underline));
 
+        metrics = g.getFontMetrics();
         u = strong = false;
 
         String[] words = text.split(" ");
@@ -160,12 +156,8 @@ public class Cursor {
         int startX = x_offset;
         int startY = y_offset;
         int index = 0;
-        String line = "";
-        if (!list && inline == 0)
-            startX = xPad + spaces * spaceWidth();
-        if (inline > 0)
-            startY -= (yPad + wordHeight());
-        list = false;
+        String line = ""; 
+        // System.out.println(spaces + text);
         // System.out.printf("start x=%d, y=%d\n", startX, startY);
         while (index < words.length) {
             line = words[index++];
@@ -175,12 +167,12 @@ public class Cursor {
                 }    
             g2d.drawString(line, startX, startY);
             y_offset(y_offset + wordHeight() + yPad);
-            startY += wordHeight() + yPad;
-            startX = xPad + spaces * spaceWidth();
+            startY += wordHeight() + yPad; 
+            startX = spaces * spaceWidth() + xPad;
         }
-        x_offset += metrics.stringWidth(line) + startX;
+        x_offset += metrics.stringWidth(line) + startX + spaceWidth();
         // can break here if too much content
-        y_offset(startY); // startY - wordHeight() - yPad;
+        y_offset(startY - wordHeight() - yPad); // startY - wordHeight() - yPad;
         // System.out.printf("end   x=%d, y=%d\n", x_offset, y_offset);
         g.setFont(temp);
     }

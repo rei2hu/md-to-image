@@ -47,47 +47,58 @@ public class HTMLRenderer {
         // g.setColor(Color.WHITE);
         // g.fillRect(0, 0, width, height);
         cursor = new Cursor(image, 15, 15);
-        traverse(hpt.getRoot()); 
+        draw(hpt.getRoot()); 
         ImageIO.write(cursor.getImage(), "jpg", new File(path));
     }
 
-    private void traverse(TagNode node) {
-        traverse(node, 0);
-    }
-
-    private void traverse(TagNode node, int spaces) {
-        drawNode(node, spaces);
-        if (node.getLeft() != null)
-            traverse(node.getLeft(), spaces + 4);
-        if (node.getRight() != null)
-            traverse(node.getRight(), spaces);
+    private void draw(TagNode node) {
+        drawNode(node, 0);
     }
 
     private void drawNode(TagNode node, int spaces) {
         // for (int i = 0; i < spaces; i++) System.out.print(" ");
         // System.out.println(node);
-        
+        if (node == null) return;
         if (node instanceof content) {
+            // content node only has right
             drawNode((content) node, spaces);
-        } else {
-            inlineNext = 0;
-            if (node instanceof hr) {
-                drawNode((hr) node);
-            } else if (node instanceof li) {
-                drawNode((li) node, spaces);
-            } else if (node instanceof p) {
-                drawNode((p) node, spaces);
-            } else if (node instanceof strong) {
-                drawNode((strong) node);
-            } else if (node instanceof u) {
-                drawNode((u) node);
-            } else if (node instanceof ul) {
-                drawNode((ul) node, spaces);
-            } else if (node instanceof img){
-                drawNode((img) node);
-            } else { // unknown
-                drawNode((unknown) node);
-            }
+            drawNode(node.getRight(), spaces);
+        } else if (node instanceof hr) {
+            // standalone tag only has right
+            drawNode((hr) node);
+            drawNode(node.getRight(), spaces);
+        } else if (node instanceof li) {
+            cursor.lineBreak(spaces);
+            cursor.drawBullet(spaces, 3);
+            drawNode(node.getLeft(), spaces + 4);
+            // cursor.lineBreak(spaces);
+            drawNode(node.getRight(), spaces);
+        } else if (node instanceof p) {
+            drawNode(node.getLeft(), spaces);
+            cursor.lineBreak(spaces);
+            drawNode(node.getRight(), spaces);
+        } else if (node instanceof strong) {
+            // this is inline, technically a content node
+            drawNode((strong) node);
+            drawNode(node.getLeft(), spaces); // content
+            drawNode(node.getRight(), spaces);
+        } else if (node instanceof u) {
+            // this is also inline, technically a content node
+            drawNode((u) node);
+            drawNode(node.getLeft(), spaces); // content
+            drawNode(node.getRight(), spaces);
+        } else if (node instanceof ul) {
+            // cursor.lineBreak(spaces);
+            drawNode(node.getLeft(), spaces + 4);
+            cursor.lineBreak(spaces);
+            drawNode(node.getRight(), spaces);
+        } else if (node instanceof img){
+            drawNode((img) node);
+            drawNode(node.getRight(), spaces);
+        } else { // unknown
+            // drawNode((unknown) node);
+            drawNode(node.getLeft(), spaces + 4);
+            drawNode(node.getRight(), spaces);
         }
     }
 
@@ -96,6 +107,7 @@ public class HTMLRenderer {
         String url = node.getAttribute("src").getValue();
         // missing protocol or something idk
         url = "http:" + url.substring(1, url.length() - 1); 
+        System.out.println(url);
         cursor.drawImage(url);
     }
 
@@ -104,9 +116,7 @@ public class HTMLRenderer {
     }
 
     private void drawNode(content node, int spaces) {
-        cursor.writeText(node.toString(), inlineNext, spaces + modifier);
-        modifier = 0;
-        inlineNext = Math.max(inlineNext - 1, 0);
+        cursor.writeText(node.toString(), spaces + modifier);
     }
 
     private void drawNode(hr node) {
@@ -118,31 +128,18 @@ public class HTMLRenderer {
     }
 
     private void drawNode(p node, int spaces) {
-        cursor.lineBreak(spaces);
-        // cursor.resetX(spaces);
     }
     
     private void drawNode(strong node) {
-        modifier -= 4;
         cursor.setBold();
-        inlineNext = 2;
     }
+
     
     private void drawNode(u node) {
-        modifier -= 4;
         cursor.setUnderline();
-        inlineNext = 2;
     }
 
     private void drawNode(ul node, int spaces) {
-        // cursor.lineBreak(spaces);
-        cursor.resetX(spaces);
     }
-
-    // traverse and draw
-    private void drawText(String line) {
-        g.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-        g.setColor(Color.BLACK);
-        g.drawString(line, 10, 23);
-    }
+    
 }
