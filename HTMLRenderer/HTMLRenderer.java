@@ -135,8 +135,8 @@ public class HTMLRenderer {
     }
 
     private void drawNode(ul node, int spaces) {
-        cursor.lineBreak(spaces);
-        // cursor.resetX(spaces);
+        // cursor.lineBreak(spaces);
+        cursor.resetX(spaces);
     }
 
     // traverse and draw
