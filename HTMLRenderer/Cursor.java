@@ -30,7 +30,7 @@ public class Cursor {
     private FontMetrics metrics;
     private Font font = new Font("Times New Roman", Font.PLAIN, 16);
     private Color color = Color.BLACK;
-    private Graphics g;
+    private Graphics2D g;
 
     private boolean u = false;
     private boolean strong = false;
@@ -41,7 +41,7 @@ public class Cursor {
         yPad = vertPad;
 
         image = i;
-        g = image.getGraphics();
+        g = (Graphics2D) image.getGraphics();
         metrics = g.getFontMetrics();
         
         g.setColor(Color.WHITE);
@@ -60,7 +60,9 @@ public class Cursor {
             BufferedImage temp = image;
             image = new BufferedImage(temp.getWidth(), (int) (y_offset * 1.5), 
                 BufferedImage.TYPE_INT_RGB);
-            g = image.getGraphics();
+            g = (Graphics2D) image.getGraphics();
+            g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                             RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             g.setColor(Color.WHITE);
             g.fillRect(0, 0, image.getWidth(), image.getHeight());
             g.drawImage(temp, 0, 0, temp.getWidth(), temp.getHeight(), null);
@@ -102,8 +104,8 @@ public class Cursor {
     public void drawBullet(int spaces, int size) {
         Color temp = g.getColor();
         g.setColor(Color.BLACK);
-        g.fillRect(xPad + (spaces) * spaceWidth(), y_offset - ((wordHeight() - size)/ 2), size, size);
-        x_offset = (spaces) * spaceWidth() + xPad + spaceWidth() + size + 3;
+        g.fillRect(xPad + (spaces - 2) * spaceWidth(), y_offset - ((wordHeight() - size)/ 2), size, size);
+        // x_offset = (spaces) * spaceWidth() + xPad + spaceWidth();
     }
 
     public BufferedImage getImage() {
@@ -149,9 +151,6 @@ public class Cursor {
 
         String[] words = text.split(" ", -1);
         // System.out.println(java.util.Arrays.toString(words));
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                             RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         int startX = x_offset;
         int startY = y_offset;
         int index = 0;
@@ -165,7 +164,7 @@ public class Cursor {
                     line = line + " " + words[index++];
                 }
             newline = newline || index < words.length;
-            g2d.drawString(line, startX, startY);
+            g.drawString(line, startX, startY);
             y_offset(y_offset + wordHeight() + yPad);
             startY += wordHeight() + yPad; 
             startX = spaces * spaceWidth() + xPad;
@@ -179,13 +178,5 @@ public class Cursor {
         // System.out.printf("end   x=%d, y=%d\n", x_offset, y_offset);
         g.setFont(temp);
         metrics = g.getFontMetrics();
-    }
-
-    public void underlineNext() {
-        u = true;
-    }
-
-    public void boldNext() {
-        strong = true;
     }
 }

@@ -38,7 +38,7 @@ public class HTMLRenderer {
         hpt = ps.parse();
     }
 
-    public void createImage(int width, String path) throws Exception {
+    public void createImage(int width, int xPad, int yPad, String path) throws Exception {
         makeTree();
         // height should be something
         int height = 100;
@@ -46,7 +46,7 @@ public class HTMLRenderer {
         // g = image.getGraphics();
         // g.setColor(Color.WHITE);
         // g.fillRect(0, 0, width, height);
-        cursor = new Cursor(image, 15, 15);
+        cursor = new Cursor(image, xPad, yPad);
         draw(hpt.getRoot()); 
         ImageIO.write(cursor.getImage(), "jpg", new File(path));
     }
@@ -70,7 +70,7 @@ public class HTMLRenderer {
         } else if (node instanceof li) {
             cursor.lineBreak(spaces);
             cursor.drawBullet(spaces, 3);
-            drawNode(node.getLeft(), spaces + 4);
+            drawNode(node.getLeft(), spaces);
             // cursor.lineBreak(spaces);
             drawNode(node.getRight(), spaces);
         } else if (node instanceof p) {
@@ -127,9 +127,6 @@ public class HTMLRenderer {
         cursor.drawBullet(spaces, 4);
     }
 
-    private void drawNode(p node, int spaces) {
-    }
-    
     private void drawNode(strong node) {
         cursor.setBold();
     }
@@ -137,9 +134,6 @@ public class HTMLRenderer {
     
     private void drawNode(u node) {
         cursor.setUnderline();
-    }
-
-    private void drawNode(ul node, int spaces) {
     }
     
 }
