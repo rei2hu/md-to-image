@@ -1,6 +1,6 @@
 test:
 	javac HTMLImgDemo.java
-	java HTMLImgDemo ./tests/test.html
+	java -Djava.awt.headless=true HTMLImgDemo ./tests/test.html
 clean:
 	rm *.class
 	rm */*.class
