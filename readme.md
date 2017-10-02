@@ -26,4 +26,4 @@ TODO:
     * Documentation
 
 # Example of current output:
-![test](tests/test.jpg)
+![test](tests/test59-03.html.jpg)
