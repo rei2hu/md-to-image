@@ -3,10 +3,11 @@ package HTMLParser.Tokens;
 import java.util.Objects;
 
 public class Attribute {
-    String key;
-    String value;
 
-    public Attribute(String k, String v) {
+    private String key;
+    private String value;
+
+    Attribute(String k, String v) {
         key = k;
         value = v;
     }
@@ -24,6 +25,7 @@ public class Attribute {
     }
 
     public boolean equals(Object o) {
+        // NO
         if (!(o instanceof Attribute)) return false;
         return key.equals(((Attribute) o).key);
     }

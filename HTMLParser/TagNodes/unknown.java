@@ -4,7 +4,7 @@ public class unknown extends BlockTagNode {
     
     private String type;
 
-    public unknown(String name) {
+    unknown(String name) {
         type = name;
     }
 
