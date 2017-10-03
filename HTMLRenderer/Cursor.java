@@ -14,9 +14,9 @@ import java.net.URL;
 import java.awt.font.TextAttribute;
 
 // this class will handle all text 'writing'
-public class Cursor {
+class Cursor {
     
-    static java.util.Hashtable<TextAttribute, Object> underline = new java.util.Hashtable<>();
+    private static java.util.Hashtable<TextAttribute, Object> underline = new java.util.Hashtable<>();
     static {
         underline.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
     }
@@ -34,9 +34,11 @@ public class Cursor {
 
     private boolean u = false;
     private boolean strong = false;
-    private boolean list = false;
+    private boolean itali = false;
 
-    public Cursor(BufferedImage i, int horizPad, int vertPad) {
+    // consider a stack to keep track of font/colors
+
+    Cursor(BufferedImage i, int horizPad, int vertPad) {
         xPad = horizPad;
         yPad = vertPad;
 
@@ -79,7 +81,7 @@ public class Cursor {
         return metrics.getHeight();
     }
 
-    public void drawImage(String url) {
+    void drawImage(String url) {
         BufferedImage image = null;
         try {
             image = ImageIO.read(new URL(url));
@@ -101,43 +103,52 @@ public class Cursor {
             System.out.println("couldnt ge timage");
     }
 
-    public void drawBullet(int spaces, int size) {
-        Color temp = g.getColor();
+    void drawBullet(int spaces, int size) {
         g.setColor(Color.BLACK);
         g.fillRect(xPad + (spaces - 2) * spaceWidth(), y_offset - ((wordHeight() - size)/ 2), size, size);
         // x_offset = (spaces) * spaceWidth() + xPad + spaceWidth();
     }
 
-    public BufferedImage getImage() {
+    BufferedImage getImage() {
         return image.getSubimage(0, 0, image.getWidth(), y_offset + yPad);
     }
 
-    public void drawLine(int width) {
+    void drawLine(int width) {
         Color temp = g.getColor();
         g.setColor(Color.GRAY);
         g.fillRect(xPad, y_offset - (wordHeight() / 2), image.getWidth() -  2 * xPad, width);
         y_offset(y_offset + wordHeight() + xPad);
         g.setColor(temp);
     }
-   
-    public void setUnderline() {
-        u = true;
+
+    /*
+    void setColor(Color color) {
+        g.setColor()
+    }
+    */
+
+    void setUnderline(boolean a) {
+        u = a;
     }
 
-    public void setBold() {
-        strong = true;
+    void setBold(boolean a) {
+        strong = a;
     }
 
-    public void lineBreak(int spaces) {
+    void setItalic(boolean a) {
+        itali = a;
+    }
+
+    void lineBreak(int spaces) {
         y_offset(y_offset + yPad + wordHeight());
         resetX(spaces);
     }
 
-    public void resetX(int spaces) {
+    private void resetX(int spaces) {
         x_offset = xPad + spaces * spaceWidth();
     }
 
-    public void writeText(String text, int spaces) {
+    void writeText(String text, int spaces) {
         
         // System.out.println("[" + spaces + "] " + text);
         Font temp = g.getFont();
@@ -145,9 +156,10 @@ public class Cursor {
             g.setFont(g.getFont().deriveFont(Font.BOLD));
         if (u)
             g.setFont(g.getFont().deriveFont(underline));
+        if (itali)
+            g.setFont(g.getFont().deriveFont(Font.ITALIC));
 
         metrics = g.getFontMetrics();
-        u = strong = false;
 
         String[] words = text.split(" ", -1);
         // System.out.println(java.util.Arrays.toString(words));
