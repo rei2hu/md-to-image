@@ -1,5 +1,7 @@
 package HTMLParser;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 import HTMLParser.Tokens.*;
@@ -26,57 +28,85 @@ public class HTMLParser {
         }
     }
 
-    private TagNode parse2() throws java.io.IOException {
-        Token t;
-        t = sc.nextToken();
-        if (t == null) return null;
-        if (t instanceof OpeningTag) {
-            Tag temp = (Tag) t;
-            TagNode n = tnm.makeNode(temp.getTagName());
-            n.setAttributes(temp.getAttributes());        
-            n.setLeft(parse2());
-            n.setRight(parse2());
-            return n;
-        } else if (t instanceof ClosingTag) {
-            return null;
-        } else if (t instanceof StandaloneTag) {
-            Tag temp = (Tag) t;
-            TagNode n = tnm.makeNode(temp.getTagName());
-            n.setAttributes(temp.getAttributes());
-            n.setLeft(null); // should NOT have left
-            n.setRight(parse2());
-            return n;
-        } else { // content
-            TagNode n = tnm.makeNode("content", t.toString());
-            n.setLeft(null);
-            n.setRight(parse2());
-            return n;
+    private TagNode parse2() throws Exception {
+        // if just put opening tag on
+        // next node will be nested to the left unless closing
+        //
+        // closing tag means remove
+        // then go next thing is to the right of what was closed
+        //
+        // if standalone tag
+        // go right unless just opened
+        //
+        // content
+        // treater same as standalone
+
+        Stack<TagNode> stack = new Stack<>();
+        Token token;
+        TagNode node = null, root = null;
+        Tag tag;
+        boolean goingLeft = false;
+
+        while ((token = sc.nextToken()) != null) {
+            boolean temp;
+
+            if (token instanceof OpeningTag) {
+                tag = (Tag) token;
+                node = tnm.makeNode(tag.getTagName());
+                node.setAttributes(tag.getAttributes());
+                temp = true;
+            } else if (token instanceof ClosingTag) {
+                TagNode nested;
+                // System.out.println(nested + " " + token + (nested.equals(token)));
+                while(!stack.isEmpty()) {
+                    nested = stack.peek();
+                    if (nested.equals(token)) break;
+                    stack.pop();
+                }
+                continue;
+            } else if (token instanceof StandaloneTag) {
+                Tag tmp = (Tag) token;
+                node = tnm.makeNode(tmp.getTagName());
+                node.setAttributes(tmp.getAttributes());
+                temp = false;
+            } else {
+                node = tnm.makeNode("content", token.toString());
+                temp = false;
+            }
+            if (!stack.isEmpty()) {
+                if (goingLeft)
+                    stack.peek().setLeft(node);
+                else
+                    stack.peek().setRight(node);
+            }
+            stack.push(node);
+            goingLeft = temp;
+            if (root == null) root = node; // idk
         }
+        return root;
     }
 
     private void verifyTagsMatch() throws Exception {
         HTMLScanner sc = this.sc.clone();
         Stack<Tag> stack = new Stack<>();
         Token t;
-        try {
-            while ((t = sc.nextToken()) != null) {
-                if (t instanceof OpeningTag) {
-                    stack.push((Tag) t);
-                } else if (t instanceof ClosingTag) {
-                    Tag s = stack.peek();
-                    if (s.equals(t)) {
-                        stack.pop();
-                    } else {
-                        throw new Exception(String.format("Expected %s but got %s", s, t));
-                    }
-                } else if (t instanceof StandaloneTag) {
-                    // no need to match
-                } else {
-                    // no need to match
+        while ((t = sc.nextToken()) != null) {
+            if (t instanceof OpeningTag) {
+                stack.push((Tag) t);
+            } else if (t instanceof ClosingTag) {
+                Tag s = stack.pop();
+                while (!s.equals(t) && !stack.isEmpty()) {
+                    System.out.printf("Threw off %s tag \n", s);
+                    s = stack.pop();
                 }
+                if (!s.equals(t)) {
+                    throw new Exception(String.format("Could not find a matching opening tag for %s", t));
+                }
+            } else if (t instanceof StandaloneTag) {
+                // no need to match
+            } else {
+                // no need to match
             }
-        } catch(java.io.IOException e) {
-            throw e;
         }
     }
 

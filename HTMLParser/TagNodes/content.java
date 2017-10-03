@@ -50,6 +50,7 @@ public class content extends InlineTagNode {
     }
 
     public content(String s) {
+        super("content");
         content = replaceEntities(s);
     }
 

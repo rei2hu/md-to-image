@@ -3,7 +3,11 @@ package HTMLParser.TagNodes;
 public class strong extends InlineTagNode {
 
     public strong() {
+        super("strong");
+    }
 
+    public strong(boolean isActuallyB) {
+        super("b");
     }
 
     public String toString() {

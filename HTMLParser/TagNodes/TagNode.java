@@ -2,6 +2,7 @@ package HTMLParser.TagNodes;
 
 import HTMLParser.Tokens.Attributes;
 import HTMLParser.Tokens.Attribute;
+import HTMLParser.Tokens.Tag;
 
 public class TagNode {
 
@@ -9,6 +10,15 @@ public class TagNode {
     private TagNode right;
     private TagNode parent;
     private Attributes attributes;
+    private String tag;
+
+    public TagNode(String type) {
+        tag = type;
+    }
+
+    public String getTagName() {
+        return tag;
+    }
 
     public TagNode setLeft(TagNode l) {
         left = l;
@@ -56,6 +66,15 @@ public class TagNode {
         return sb.toString();
     }
 
+    public boolean equals(Object o) {
+        if (!(o instanceof TagNode)) {
+            if (!(o instanceof Tag))
+                return false;
+            return ((Tag) o).getTagName().equals(tag);
+        }
+        return ((TagNode) o).getTagName().equals(tag);
+
+    }
     public String toString() {
         return "<TAGNODE" + attributesString() + ">";
     }

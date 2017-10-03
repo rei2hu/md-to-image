@@ -15,11 +15,13 @@ So enter this. A super stripped html parser and renderer. Eh I'm still working o
 
 Can do:
 - [ ] Parsing
-    - [ ] Handle *empty* tags
+    - [x] Handle *empty* tags
     - [x] Replace entities in content
     - [ ] Add handling for more tags
         - [ ] Tables
+        - [ ] Stop using same tag for different tags e.g. p, div
 - [ ] Rendering
+    - [x] Automatically increase height as needed
     - [x] Handle inline content properly
     - [ ] Make renderer render better
     - [x] Remove extra spaces from inline content
@@ -28,6 +30,6 @@ Can do:
     - [ ] Other aesthetic options
 - [ ] Other
     - [ ] Documentation
-        - [ ] Renderer
+    
 # Example of current output:
 ![test](tests/test59-03.html.jpg)

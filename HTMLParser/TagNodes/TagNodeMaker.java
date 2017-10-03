@@ -14,6 +14,8 @@ public class TagNodeMaker {
         TagNode n;
         switch(nodeType) {
             case "div": // lol
+                n = new p(true);
+                break;
             case "p":
                 n = new p();
                 break;
@@ -24,6 +26,8 @@ public class TagNodeMaker {
                 n = new ul();
                 break;
             case "b":
+                n = new strong(true);
+                break;
             case "strong":
                 n = new strong();
                 break;

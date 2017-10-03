@@ -53,8 +53,8 @@ class HTMLScanner {
                             }
                             // if opening tag ends with / then it also closes e.g. <asd />
                            if (sb.charAt(sb.length() - 1) == '/') {
-                                // remove space and /
-                                sb.setLength(sb.length() - 2);
+                                // remove /
+                                sb.setLength(sb.length() - 1);
                                 String s = sb.toString();
                                 String[] kvs = s.split(" ");
                                 if (kvs.length > 1)

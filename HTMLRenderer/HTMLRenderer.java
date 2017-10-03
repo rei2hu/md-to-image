@@ -88,7 +88,7 @@ public class HTMLRenderer {
             cursor.lineBreak(spaces);
             drawNode(node.getRight(), spaces);
         } else if (node instanceof unknown){ // unknown
-            System.out.println("Encountered unknown node (" + ((unknown) node).getType() + ").");
+            System.out.println("Encountered unknown node (" + ((unknown) node).getTagName() + ").");
             // drawNode((unknown) node);
             drawNode(node.getLeft(), spaces + 4);
             drawNode(node.getRight(), spaces);
