@@ -41,9 +41,11 @@ public class HTMLParser {
         // content
         // treater same as standalone
 
+        Queue<Tag> unmatchedTags = verifyTagsMatch();
+        // System.out.println(unmatchedTags.size());
         Stack<TagNode> stack = new Stack<>();
         Token token;
-        TagNode node = null, root = null;
+        TagNode node, root = null;
         Tag tag;
         boolean goingLeft = false;
 
@@ -54,7 +56,12 @@ public class HTMLParser {
                 tag = (Tag) token;
                 node = tnm.makeNode(tag.getTagName());
                 node.setAttributes(tag.getAttributes());
-                temp = true;
+                if (token.equals(unmatchedTags.peek())) {
+                    // System.out.println("An unmatched tag was found " + unmatchedTags.remove());
+                    unmatchedTags.remove();
+                    temp = false;
+                } else
+                    temp = true;
             } else if (token instanceof ClosingTag) {
                 TagNode nested;
                 // System.out.println(nested + " " + token + (nested.equals(token)));
@@ -86,9 +93,10 @@ public class HTMLParser {
         return root;
     }
 
-    private void verifyTagsMatch() throws Exception {
+    private Queue verifyTagsMatch() throws Exception {
         HTMLScanner sc = this.sc.clone();
         Stack<Tag> stack = new Stack<>();
+        Queue<Tag> queue = new LinkedList<>();
         Token t;
         while ((t = sc.nextToken()) != null) {
             if (t instanceof OpeningTag) {
@@ -96,7 +104,7 @@ public class HTMLParser {
             } else if (t instanceof ClosingTag) {
                 Tag s = stack.pop();
                 while (!s.equals(t) && !stack.isEmpty()) {
-                    System.out.printf("Threw off %s tag \n", s);
+                    queue.add(s);
                     s = stack.pop();
                 }
                 if (!s.equals(t)) {
@@ -108,6 +116,14 @@ public class HTMLParser {
                 // no need to match
             }
         }
+        Queue<Tag> temp = new LinkedList<>();
+        while (!stack.isEmpty())
+            temp.add(stack.pop());
+        while(!temp.isEmpty())
+            stack.add(temp.remove());
+        while(!stack.isEmpty())
+            queue.add(stack.pop());
+        return queue;
     }
 
 }
