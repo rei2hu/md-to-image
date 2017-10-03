@@ -16,7 +16,7 @@ So enter this. A super stripped html parser and renderer. Eh I'm still working o
 Can do:
 - [ ] Parsing
     - [ ] Handle *empty* tags
-    - [ ] Replace entities in content
+    - [x] Replace entities in content
     - [ ] Add handling for more tags
         - [ ] Tables
 - [ ] Rendering
