@@ -70,6 +70,7 @@ public class HTMLParser {
                     if (nested.equals(token)) break;
                     stack.pop();
                 }
+                goingLeft = false;
                 continue;
             } else if (token instanceof StandaloneTag) {
                 Tag tmp = (Tag) token;
@@ -88,7 +89,8 @@ public class HTMLParser {
             }
             stack.push(node);
             goingLeft = temp;
-            if (root == null) root = node; // idk
+            if (root == null)
+                root = node; // idk
         }
         return root;
     }
