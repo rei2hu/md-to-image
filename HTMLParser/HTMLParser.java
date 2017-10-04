@@ -1,5 +1,6 @@
 package HTMLParser;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
@@ -97,7 +98,7 @@ public class HTMLParser {
 
     private Queue verifyTagsMatch() throws Exception {
         HTMLScanner sc = this.sc.clone();
-        Stack<Tag> stack = new Stack<>();
+        Deque<Tag> stack = new LinkedList<>();
         Queue<Tag> queue = new LinkedList<>();
         Token t;
         while ((t = sc.nextToken()) != null) {
@@ -118,13 +119,8 @@ public class HTMLParser {
                 // no need to match
             }
         }
-        Queue<Tag> temp = new LinkedList<>();
         while (!stack.isEmpty())
-            temp.add(stack.pop());
-        while(!temp.isEmpty())
-            stack.add(temp.remove());
-        while(!stack.isEmpty())
-            queue.add(stack.pop());
+            queue.add(stack.remove()); // stack is actually a deque
         return queue;
     }
 
