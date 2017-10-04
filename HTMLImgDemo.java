@@ -2,7 +2,7 @@ import java.lang.StringBuilder;
 import java.io.File;
 import java.util.Scanner;
 
-import HTMLRenderer.HTMLRenderer;
+import htmlrenderer.HTMLRenderer;
 
 public class HTMLImgDemo {
 
