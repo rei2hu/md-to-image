@@ -120,7 +120,7 @@ public class HTMLParser {
             }
         }
         while (!stack.isEmpty())
-            queue.add(stack.remove()); // stack is actually a deque
+            queue.add(stack.removeLast()); // stack is actually a deque
         return queue;
     }
 

@@ -34,10 +34,11 @@ public class HTMLImgDemo {
 
      }
      public static void main(String[] args) throws java.io.FileNotFoundException {
-         if (args.length > 0)
-             makeImage(new File(args[0]));
-         else
-            getFiles(new File("./tests"));
+         makeImage(new File("./tests/test-html.html"));
+//         if (args.length > 0)
+//             makeImage(new File(args[0]));
+//         else
+//            getFiles(new File("./tests"));
      }
 
 }
