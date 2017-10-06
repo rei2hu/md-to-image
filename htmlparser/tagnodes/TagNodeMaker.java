@@ -13,47 +13,43 @@ public class TagNodeMaker {
     public TagNode makeNode(String nodeType, String content) {
         TagNode n;
         switch(nodeType) {
-            case "div": // lol
-                n = new p(true);
-                break;
             case "p":
-                n = new p();
+            case "div": // lol
+                n = new BlockNode(nodeType);
                 break;
             case "u":
-                n = new u();
+                n = new UnderlineNode(nodeType);
                 break;
             case "ul":
-                n = new ul();
+                n = new UnorderedListNode(nodeType);
                 break;
             case "b":
-                n = new strong(true);
-                break;
             case "strong":
-                n = new strong();
+                n = new BoldNode(nodeType);
                 break;
             case "li":
-                n = new li();
+                n = new ListItemNode(nodeType);
                 break;
             case "hr":
-                n = new hr();
+                n = new ThematicBreakNode(nodeType);
                 break;
             case "content":
-                n = new content(content);
+                n = new ContentNode(content);
                 break;
             case "img":
                 n = new img();
                 break;
             case "br":
-                n = new br();
+                n = new LineBreakNode(nodeType);
                 break;
             case "a":
                 n = new a();
                 break;
             case "em":
-                n = new em();
+                n = new ItalicNode(nodeType);
                 break;
             default:
-                n = new unknown(nodeType);
+                n = new UnknownNode(nodeType);
         }
         return n;
     }

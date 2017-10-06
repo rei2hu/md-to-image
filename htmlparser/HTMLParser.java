@@ -39,7 +39,7 @@ public class HTMLParser {
         // if standalone tag
         // go right unless just opened
         //
-        // content
+        // ContentNode
         // treater same as standalone
 
         Queue<Tag> unmatchedTags = verifyTagsMatch();
@@ -96,7 +96,7 @@ public class HTMLParser {
         return root;
     }
 
-    private Queue verifyTagsMatch() throws Exception {
+    private Queue<Tag> verifyTagsMatch() throws Exception {
         HTMLScanner sc = this.sc.clone();
         Deque<Tag> stack = new LinkedList<>();
         Queue<Tag> queue = new LinkedList<>();

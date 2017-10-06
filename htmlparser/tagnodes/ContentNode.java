@@ -3,7 +3,7 @@ package htmlparser.tagnodes;
 import java.util.HashMap;
 import java.util.regex.*;
 
-public class content extends InlineTagNode {
+public class ContentNode extends InlineTagNode {
 
 
     // keel me
@@ -49,7 +49,7 @@ public class content extends InlineTagNode {
         return sb.toString();
     }
 
-    public content(String s) {
+    public ContentNode(String s) {
         super("content");
         content = replaceEntities(s);
     }

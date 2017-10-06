@@ -6,16 +6,9 @@ public class OpeningTag extends Tag {
         super(tag);
     }
 
-    public OpeningTag(String tag, String[] atrs) {
+    public OpeningTag(String tag, String atrs) {
         super(tag);
-  
-        for (String s: atrs) {
-            String[] kv = s.split("=");
-            if (kv.length >= 2)
-                attributes.add(kv[0], kv[1]);
-            else
-                attributes.add(kv[0], "");
-        }
+        attributes = new Attributes(atrs);
     }
 
     public String toString() {

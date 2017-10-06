@@ -75,8 +75,11 @@ public class TagNode {
         return ((TagNode) o).getTagName().equals(tag);
 
     }
+
     public String toString() {
-        return "<TAGNODE" + attributesString() + ">";
+        return "<" + getTagName() + attributesString() + ">";
     }
 }
+
+
 

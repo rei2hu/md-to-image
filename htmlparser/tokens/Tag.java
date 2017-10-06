@@ -23,7 +23,7 @@ public class Tag implements Token {
     }
 
     public boolean equals(Object o) {
-        // fuck u intellij!!
+        // fuck UnderlineNode intellij!!
         if (!(o instanceof Tag)) return false;
         return ((Tag) o).getTagName().equals(this.tagName);
     }

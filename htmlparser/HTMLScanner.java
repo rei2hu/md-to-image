@@ -56,16 +56,16 @@ class HTMLScanner {
                                 // remove /
                                 sb.setLength(sb.length() - 1);
                                 String s = sb.toString();
-                                String[] kvs = s.split(" ");
+                                String[] kvs = s.split(" ", 2);
                                 if (kvs.length > 1)
-                                    t = new StandaloneTag(kvs[0], java.util.Arrays.copyOfRange(kvs, 1, kvs.length));
+                                    t = new StandaloneTag(kvs[0], kvs[1]);
                                 else
                                     t = new StandaloneTag(kvs[0]);
                             } else {
                                 String s = sb.toString();
-                                String[] kvs = s.split(" ");
+                                String[] kvs = s.split(" ", 2);
                                 if (kvs.length > 1)
-                                    t = new OpeningTag(kvs[0], java.util.Arrays.copyOfRange(kvs, 1, kvs.length));
+                                    t = new OpeningTag(kvs[0], kvs[1]);
                                 else
                                     t = new OpeningTag(kvs[0]);
                             }

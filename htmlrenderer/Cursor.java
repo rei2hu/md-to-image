@@ -29,10 +29,8 @@ class Cursor {
     private FontMetrics metrics;
 
     private StyleManager styleManager;
-    /*
     private Font font = new Font("Times New Roman", Font.PLAIN, 16);
     private Color color = Color.BLACK;
-    */
     private Graphics2D g;
 
     private boolean u = false;
@@ -101,19 +99,27 @@ class Cursor {
         } catch(java.io.IOException e) {
 
         }
-        int height = image.getHeight();
-        int width = image.getWidth();
-        if (image.getWidth() > this.image.getWidth() - xPad * 2) {
-            double scalingFactor = 1.0 * width / (this.image.getWidth() - xPad * 2);
-            height = (int) (height / scalingFactor);
-            width = (int) (width / scalingFactor);
-        }
-        int temp = y_offset; 
-        y_offset(y_offset + wordHeight() + yPad + height);
-        if (image != null)
+        if (image != null) {
+            int height = image.getHeight();
+            int width = image.getWidth();
+            if (image.getWidth() > this.image.getWidth() - xPad * 2) {
+                double scalingFactor = 1.0 * width / (this.image.getWidth() - xPad * 2);
+                height = (int) (height / scalingFactor);
+                width = (int) (width / scalingFactor);
+            }
+            int temp = y_offset;
+            y_offset(y_offset + wordHeight() + yPad + height);
             g.drawImage(image, xPad, temp, width, height, null);
-        else
-            System.out.println("couldnt ge timage");
+        } else {
+            int temp = y_offset;
+            y_offset(y_offset + wordHeight() + yPad + 100);
+            BufferedImage tempFailed = new BufferedImage(500, 200, BufferedImage.TYPE_INT_RGB);
+            // looks liked drawstring doesnt care about linebreaks
+            // makes sense i guess
+            tempFailed.getGraphics().drawString("Couldn't load" + url, xPad, 100);
+            g.drawImage(tempFailed, xPad, temp, this.image.getWidth() - xPad * 2, 200, null);
+
+        }
     }
 
     void drawBullet(int spaces, int size) {
@@ -198,7 +204,7 @@ class Cursor {
             x_offset = metrics.stringWidth(line) + startX;
         else
             x_offset += metrics.stringWidth(line);
-        // can break here if too much content
+        // can break here if too much ContentNode
         y_offset(startY - wordHeight() - yPad); // startY - wordHeight() - yPad;
         // System.out.printf("end   x=%d, y=%d\n", x_offset, y_offset);
         g.setFont(temp);

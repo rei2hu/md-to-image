@@ -28,7 +28,7 @@ public class HTMLParseTree {
         if (node.getLeft() != null) {
             traverse(node.getLeft(), spaces + 4, s);
         }
-        if (!(node instanceof content)) {
+        if (!(node instanceof ContentNode)) {
 
             for (int i = 0; i < spaces; i++) {
                 s.append(" ");
@@ -42,8 +42,8 @@ public class HTMLParseTree {
     }
 
     private String getContents(TagNode node, boolean closing) {
-        if (node instanceof content) {
-            return ((content) node).toString();
+        if (node instanceof ContentNode) {
+            return ((ContentNode) node).toString();
         }
         String s = "<";
         if (closing) s += "/";

@@ -27,7 +27,7 @@ public class HTMLRenderer {
         makeTree();
         // height should be something
         int height = 100;
-        cursor = new Cursor(new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB), xPad, yPad);
+        cursor = new Cursor(new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB), xPad, yPad, new StyleManager());
         drawNode(hpt.getRoot(), 0);
         ImageIO.write(cursor.getImage(), "jpg", new File(path));
     }
@@ -36,39 +36,39 @@ public class HTMLRenderer {
         // for (int i = 0; i < spaces; i++) System.out.print(" ");
         // System.out.println(node);
         if (node == null) return;
-        if (node instanceof content) {
-            // content node only has right
+        if (node instanceof ContentNode) {
+            // ContentNode node only has right
             cursor.writeText(node.toString(), spaces);
             drawNode(node.getLeft(), spaces);
             drawNode(node.getRight(), spaces);
-        } else if (node instanceof hr) {
+        } else if (node instanceof ThematicBreakNode) {
             // standalone tag only has right
             cursor.drawLine(1);
             drawNode(node.getRight(), spaces);
-        } else if (node instanceof li) {
+        } else if (node instanceof ListItemNode) {
             cursor.lineBreak(spaces);
             cursor.drawBullet(spaces, 3);
             drawNode(node.getLeft(), spaces);
             // cursor.lineBreak(spaces);
             drawNode(node.getRight(), spaces);
-        } else if (node instanceof p) {
+        } else if (node instanceof BlockNode) {
             cursor.lineBreak(spaces);
             drawNode(node.getLeft(), spaces);
             cursor.lineBreak(spaces);
             drawNode(node.getRight(), spaces);
-        } else if (node instanceof strong) {
-            // this is inline, technically a content node
+        } else if (node instanceof BoldNode) {
+            // this is inline, technically a ContentNode node
             cursor.setBold(true);
-            drawNode(node.getLeft(), 0); // content
+            drawNode(node.getLeft(), 0); // ContentNode
             cursor.setBold(false);
             drawNode(node.getRight(), spaces);
-        } else if (node instanceof u) {
-            // this is also inline, technically a content node
+        } else if (node instanceof UnderlineNode) {
+            // this is also inline, technically a ContentNode node
             cursor.setUnderline(true);
-            drawNode(node.getLeft(), 0); // content
+            drawNode(node.getLeft(), 0); // ContentNode
             cursor.setUnderline(false);
             drawNode(node.getRight(), spaces);
-        } else if (node instanceof ul) {
+        } else if (node instanceof UnorderedListNode) {
             // cursor.lineBreak(spaces);
             drawNode(node.getLeft(), spaces + 4);
             cursor.lineBreak(spaces);
@@ -76,12 +76,12 @@ public class HTMLRenderer {
         } else if (node instanceof img) {
             drawNode((img) node);
             drawNode(node.getRight(), spaces);
-        } else if (node instanceof br) {
+        } else if (node instanceof LineBreakNode) {
             cursor.lineBreak(spaces);
             drawNode(node.getRight(), spaces);
-        } else if (node instanceof unknown){ // unknown
-            System.out.println("Encountered unknown node (" + ((unknown) node).getTagName() + ").");
-            // drawNode((unknown) node);
+        } else if (node instanceof UnknownNode){ // UnknownNode
+            System.out.println("Encountered UnknownNode node (" + ((UnknownNode) node).getTagName() + ").");
+            // drawNode((UnknownNode) node);
             drawNode(node.getLeft(), spaces + 4);
             drawNode(node.getRight(), spaces);
         } else if (node instanceof a) {
@@ -89,7 +89,7 @@ public class HTMLRenderer {
             drawNode(node.getLeft(), spaces);
             cursor.setUnderline(false);
             drawNode(node.getRight(), spaces);
-        } else if (node instanceof em) {
+        } else if (node instanceof ItalicNode) {
             cursor.setItalic(true);
             drawNode(node.getLeft(), spaces);
             cursor.setItalic(false);
@@ -105,7 +105,7 @@ public class HTMLRenderer {
         cursor.drawImage(url);
     }
 
-    private void drawNode(unknown node) {
+    private void drawNode(UnknownNode node) {
         // wee
     }
 
