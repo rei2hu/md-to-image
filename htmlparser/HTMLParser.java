@@ -111,7 +111,7 @@ public class HTMLParser {
                     s = stack.pop();
                 }
                 if (!s.equals(t)) {
-                    throw new Exception(String.format("Could not find a matching opening tag for %s", t));
+                    throw new Exception(String.format("Could not find LinkNode matching opening tag for %s", t));
                 }
             } else if (t instanceof StandaloneTag) {
                 // no need to match
@@ -120,7 +120,7 @@ public class HTMLParser {
             }
         }
         while (!stack.isEmpty())
-            queue.add(stack.removeLast()); // stack is actually a deque
+            queue.add(stack.removeLast()); // stack is actually LinkNode deque
         return queue;
     }
 

@@ -57,13 +57,13 @@ public class HTMLRenderer {
             cursor.lineBreak(spaces);
             drawNode(node.getRight(), spaces);
         } else if (node instanceof BoldNode) {
-            // this is inline, technically a ContentNode node
+            // this is inline, technically LinkNode ContentNode node
             cursor.setBold(true);
             drawNode(node.getLeft(), 0); // ContentNode
             cursor.setBold(false);
             drawNode(node.getRight(), spaces);
         } else if (node instanceof UnderlineNode) {
-            // this is also inline, technically a ContentNode node
+            // this is also inline, technically LinkNode ContentNode node
             cursor.setUnderline(true);
             drawNode(node.getLeft(), 0); // ContentNode
             cursor.setUnderline(false);
@@ -73,8 +73,8 @@ public class HTMLRenderer {
             drawNode(node.getLeft(), spaces + 4);
             cursor.lineBreak(spaces);
             drawNode(node.getRight(), spaces);
-        } else if (node instanceof img) {
-            drawNode((img) node);
+        } else if (node instanceof ImageNode) {
+            drawNode((ImageNode) node);
             drawNode(node.getRight(), spaces);
         } else if (node instanceof LineBreakNode) {
             cursor.lineBreak(spaces);
@@ -84,7 +84,7 @@ public class HTMLRenderer {
             // drawNode((UnknownNode) node);
             drawNode(node.getLeft(), spaces + 4);
             drawNode(node.getRight(), spaces);
-        } else if (node instanceof a) {
+        } else if (node instanceof LinkNode) {
             cursor.setUnderline(true);
             drawNode(node.getLeft(), spaces);
             cursor.setUnderline(false);
@@ -97,7 +97,7 @@ public class HTMLRenderer {
         }
     }
 
-    private void drawNode(img node) {
+    private void drawNode(ImageNode node) {
         // this has quotes on it for some reason
         String url = node.getAttribute("src").getValue();
         // missing protocol or something idk

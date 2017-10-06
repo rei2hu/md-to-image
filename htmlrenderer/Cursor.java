@@ -37,7 +37,7 @@ class Cursor {
     private boolean strong = false;
     private boolean itali = false;
 
-    // consider a stack to keep track of font/colors
+    // consider LinkNode stack to keep track of font/colors
 
     Cursor(BufferedImage i, int horizPad, int vertPad, StyleManager sm) {
         xPad = horizPad;
@@ -61,10 +61,16 @@ class Cursor {
 
     public void endBlock() {
         styleManager.resetStyle();
+        StyleSetting style = styleManager.getStyle();
+        g.setFont(style.font);
+        g.setColor(style.color);
     }
 
     public void startBlock(Font font, Color color) {
         styleManager.addStyle(font, color);
+        StyleSetting style = styleManager.getStyle();
+        g.setFont(style.font);
+        g.setColor(style.color);
     }
 
     private void y_offset(int y) {
@@ -200,7 +206,7 @@ class Cursor {
             startY += wordHeight() + yPad; 
             startX = spaces * spaceWidth() + xPad;
         }
-        if (newline) // if moved to a new line
+        if (newline) // if moved to LinkNode new line
             x_offset = metrics.stringWidth(line) + startX;
         else
             x_offset += metrics.stringWidth(line);

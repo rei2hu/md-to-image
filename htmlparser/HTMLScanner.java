@@ -37,7 +37,7 @@ class HTMLScanner {
                     } else {
                         sb.setLength(0);
                         c = scanner.read();
-                        // starts with a / so its closing
+                        // starts with LinkNode / so its closing
                         if (c == '/') {
                             while ((c = scanner.read()) != '>') {
                                 sb.append((char) c);

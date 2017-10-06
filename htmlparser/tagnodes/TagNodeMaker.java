@@ -37,13 +37,13 @@ public class TagNodeMaker {
                 n = new ContentNode(content);
                 break;
             case "img":
-                n = new img();
+                n = new ImageNode(nodeType);
                 break;
             case "br":
                 n = new LineBreakNode(nodeType);
                 break;
             case "a":
-                n = new a();
+                n = new LinkNode(nodeType);
                 break;
             case "em":
                 n = new ItalicNode(nodeType);
