@@ -27,8 +27,12 @@ class Cursor {
 
     private BufferedImage image;
     private FontMetrics metrics;
+
+    private StyleManager styleManager;
+    /*
     private Font font = new Font("Times New Roman", Font.PLAIN, 16);
     private Color color = Color.BLACK;
+    */
     private Graphics2D g;
 
     private boolean u = false;
@@ -37,9 +41,11 @@ class Cursor {
 
     // consider a stack to keep track of font/colors
 
-    Cursor(BufferedImage i, int horizPad, int vertPad) {
+    Cursor(BufferedImage i, int horizPad, int vertPad, StyleManager sm) {
         xPad = horizPad;
         yPad = vertPad;
+
+        styleManager = sm;
 
         image = i;
         g = (Graphics2D) image.getGraphics();
@@ -53,6 +59,14 @@ class Cursor {
 
         g.setFont(font);
         g.setColor(color);
+    }
+
+    public void endBlock() {
+        styleManager.resetStyle();
+    }
+
+    public void startBlock(Font font, Color color) {
+        styleManager.addStyle(font, color);
     }
 
     private void y_offset(int y) {
