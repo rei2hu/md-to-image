@@ -39,7 +39,7 @@ public class Attributes implements java.lang.Iterable<Attribute> {
                     else
                         add(styleValue[0], styleValue[1]);
                 }
-            } else if (keyvalue[0].equals("src")) {
+            } else {
                 add(keyvalue[0], keyvalue[1]);
             }
         }
