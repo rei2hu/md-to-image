@@ -20,8 +20,9 @@ Can do:
     - [ ] Add handling for more tags
         - [ ] Tables
         - [ ] Stop using same tag for different tags e.g. p, div
-    - [ ] Add proper handling for attributes
-    - [ ] Make classes based on behavior and not tag name
+    - [x] Add proper handling for attributes
+    - [x] Make classes based on behavior and not tag name
+    - [ ] Parse properly i.e. fallbacks
 - [ ] Rendering
     - [x] Automatically increase height as needed
     - [x] Handle inline content properly

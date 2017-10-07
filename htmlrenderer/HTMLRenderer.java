@@ -36,6 +36,13 @@ public class HTMLRenderer {
         // for (int i = 0; i < spaces; i++) System.out.print(" ");
         // System.out.println(node);
         if (node == null) return;
+
+        // attributes to care about for blocks:
+        // color
+        // font-family
+        // font-size
+        // text-align eventually
+
         if (node instanceof ContentNode) {
             // ContentNode node only has right
             cursor.writeText(node.toString(), spaces);
@@ -103,10 +110,6 @@ public class HTMLRenderer {
         // missing protocol or something idk
         url = "http:" + url.substring(1, url.length() - 1); 
         cursor.drawImage(url);
-    }
-
-    private void drawNode(UnknownNode node) {
-        // wee
     }
 
 }
