@@ -31,14 +31,20 @@ class HTMLScanner {
             switch(c) {
                 case '<':
                     // don't want empty one
+                    // c == ' ' means we have < followed by a space so
+                    // its actually content
                     if (sb.toString().trim().length() > 0) {
+
                         t = new Content(sb.toString());
                         scanner.reset();
                     } else {
                         sb.setLength(0);
                         c = scanner.read();
                         // starts with LinkNode / so its closing
-                        if (c == '/') {
+                        if (c == ' ') {
+                            sb.append((char) c);
+                            break;
+                        } else if (c == '/') {
                             while ((c = scanner.read()) != '>') {
                                 sb.append((char) c);
                             }
