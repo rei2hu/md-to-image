@@ -1,5 +1,7 @@
 package htmlparser.tokens;
 
+import htmlparser.Attributes;
+
 public class StandaloneTag extends Tag {
    
     public StandaloneTag(String tag) {

@@ -1,4 +1,6 @@
-package htmlparser.tokens;
+package htmlparser;
+
+import htmlparser.Attribute;
 
 import java.util.Hashtable;
 import java.lang.StringBuilder;
@@ -13,11 +15,11 @@ public class Attributes implements java.lang.Iterable<Attribute> {
     private static Pattern attributesRegex = Pattern.compile("(.+?=(?:(?:\".*?\")|(?:'.*?')))");
     // private static Pattern srcRegex = Pattern.compile("src=((\".*?\")|('.*?'))");
 
-    Attributes() {
+    public Attributes() {
         attributes = new Hashtable<>();
     }
 
-    Attributes(String keyvalues) {
+    public Attributes(String keyvalues) {
         attributes = new Hashtable<>();
         // cant split by space because attributes can have space in them
         // well right now we'll only care about style="..." so maybe only match that

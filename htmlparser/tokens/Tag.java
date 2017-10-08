@@ -1,6 +1,8 @@
 package htmlparser.tokens;
 
 
+import htmlparser.Attributes;
+
 public class Tag implements Token {
     
     String tagName;

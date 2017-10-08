@@ -1,5 +1,7 @@
 package htmlparser.tokens;
 
+import htmlparser.Attributes;
+
 public class OpeningTag extends Tag {
 
     public OpeningTag(String tag) {

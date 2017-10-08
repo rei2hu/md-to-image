@@ -1,4 +1,4 @@
-package htmlparser.tokens;
+package htmlparser;
 
 import java.util.Objects;
 

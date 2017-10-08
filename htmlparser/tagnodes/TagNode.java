@@ -1,7 +1,7 @@
 package htmlparser.tagnodes;
 
-import htmlparser.tokens.Attributes;
-import htmlparser.tokens.Attribute;
+import htmlparser.Attributes;
+import htmlparser.Attribute;
 import htmlparser.tokens.Tag;
 
 public class TagNode {
