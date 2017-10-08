@@ -1,5 +1,6 @@
 package htmlrenderer;
 
+import java.awt.*;
 import java.io.File;
 
 import java.awt.image.BufferedImage;
@@ -27,7 +28,7 @@ public class HTMLRenderer {
         makeTree();
         // height should be something
         int height = 100;
-        cursor = new Cursor(new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB), xPad, yPad, new StyleManager());
+        cursor = new Cursor(new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB), xPad, yPad);
         drawNode(hpt.getRoot(), 0);
         ImageIO.write(cursor.getImage(), "jpg", new File(path));
     }
@@ -41,7 +42,24 @@ public class HTMLRenderer {
         // color
         // font-family
         // font-size
-        // text-align eventually
+
+        // font-family
+        // well good luck here
+        // node.getAttribute("font-family")
+
+
+        // possible size values
+        // px - this is fine
+        // em - probably will ignore this
+        // what if theres nothing?
+        // node.getAttribute("font-size");
+
+
+        // possible color values
+        // rgb  - rgb(10, 20, 30)
+        // name - red
+        // hex  - #ff0000
+        // node.getAttribute("color");
 
         if (node instanceof ContentNode) {
             // ContentNode node only has right
@@ -65,15 +83,15 @@ public class HTMLRenderer {
             drawNode(node.getRight(), spaces);
         } else if (node instanceof BoldNode) {
             // this is inline, technically LinkNode ContentNode node
-            cursor.setBold(true);
+            cursor.startBlock(Cursor.FontStyle.BOLD);
             drawNode(node.getLeft(), 0); // ContentNode
-            cursor.setBold(false);
+            cursor.endBlock();
             drawNode(node.getRight(), spaces);
         } else if (node instanceof UnderlineNode) {
             // this is also inline, technically LinkNode ContentNode node
-            cursor.setUnderline(true);
+            cursor.startBlock(Cursor.FontStyle.UNDERLINE);
             drawNode(node.getLeft(), 0); // ContentNode
-            cursor.setUnderline(false);
+            cursor.endBlock();
             drawNode(node.getRight(), spaces);
         } else if (node instanceof UnorderedListNode) {
             // cursor.lineBreak(spaces);
@@ -92,14 +110,14 @@ public class HTMLRenderer {
             drawNode(node.getLeft(), spaces + 4);
             drawNode(node.getRight(), spaces);
         } else if (node instanceof LinkNode) {
-            cursor.setUnderline(true);
+            cursor.startBlock("Times New Roman", 16, Color.BLUE, Cursor.FontStyle.UNDERLINE);
             drawNode(node.getLeft(), spaces);
-            cursor.setUnderline(false);
+            cursor.endBlock();
             drawNode(node.getRight(), spaces);
         } else if (node instanceof ItalicNode) {
-            cursor.setItalic(true);
+            cursor.startBlock(Cursor.FontStyle.ITALICIZE);
             drawNode(node.getLeft(), spaces);
-            cursor.setItalic(false);
+            cursor.endBlock();
             drawNode(node.getRight(), spaces);
         }
     }

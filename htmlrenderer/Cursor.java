@@ -19,6 +19,11 @@ class Cursor {
     static {
         underline.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
     }
+
+    enum FontStyle {
+        BOLD, UNDERLINE, ITALICIZE, PLAIN;
+    }
+
     private int x_offset = 0;
     private int y_offset = 0;
 
@@ -29,34 +34,27 @@ class Cursor {
     private FontMetrics metrics;
 
     private StyleManager styleManager;
-    private Font font = new Font("Times New Roman", Font.PLAIN, 16);
-    private Color color = Color.BLACK;
     private Graphics2D g;
-
-    private boolean u = false;
-    private boolean strong = false;
-    private boolean itali = false;
 
     // consider LinkNode stack to keep track of font/colors
 
-    Cursor(BufferedImage i, int horizPad, int vertPad, StyleManager sm) {
+    Cursor(BufferedImage i, int horizPad, int vertPad) {
         xPad = horizPad;
         yPad = vertPad;
 
-        styleManager = sm;
+        styleManager = new StyleManager();
 
         image = i;
         g = (Graphics2D) image.getGraphics();
-        metrics = g.getFontMetrics();
-        
+        g.setFont(styleManager.getStyle().font);
+
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, image.getWidth(), image.getHeight());
 
+        g.setColor(styleManager.getStyle().color);
+        metrics = g.getFontMetrics();
         x_offset = horizPad;
         y_offset(vertPad + wordHeight());
-
-        g.setFont(font);
-        g.setColor(color);
     }
 
     public void endBlock() {
@@ -64,13 +62,49 @@ class Cursor {
         StyleSetting style = styleManager.getStyle();
         g.setFont(style.font);
         g.setColor(style.color);
+        metrics = g.getFontMetrics();
     }
 
-    public void startBlock(Font font, Color color) {
+    public void startBlock() {
+        styleManager.addStyle(styleManager.getStyle());
+        // same style so no real need to update font or color or metrics
+        // well really no reason to add the same style
+    }
+
+    private Font deriveFont(Font font, FontStyle fStyle) {
+         switch (fStyle) {
+            case BOLD:
+                return font.deriveFont(Font.BOLD);
+            case ITALICIZE:
+                return font.deriveFont(Font.ITALIC);
+            case UNDERLINE:
+                return font.deriveFont(underline);
+            default:
+                return font;
+        }
+    }
+
+    public void startBlock(FontStyle fontStyle) {
+        Font font = styleManager.getStyle().font;
+        Color color = styleManager.getStyle().color;
+        font = deriveFont(font, fontStyle);
         styleManager.addStyle(font, color);
-        StyleSetting style = styleManager.getStyle();
-        g.setFont(style.font);
-        g.setColor(style.color);
+        g.setFont(font);
+        g.setColor(color);
+        metrics = g.getFontMetrics();
+    }
+
+    public void startBlock(String fontName, int fontSize, Color color) {
+        startBlock(fontName, fontSize, color, FontStyle.PLAIN);
+    }
+
+    public void startBlock(String fontName, int fontSize, Color color, FontStyle fStyle) {
+        Font newFont = new Font(fontName, Font.PLAIN, fontSize);
+        newFont = deriveFont(newFont, fStyle);
+        styleManager.addStyle(newFont, color);
+        g.setFont(newFont);
+        g.setColor(color);
+        metrics = g.getFontMetrics();
     }
 
     private void y_offset(int y) {
@@ -79,15 +113,22 @@ class Cursor {
             BufferedImage temp = image;
             image = new BufferedImage(temp.getWidth(), (int) (y_offset * 1.5), 
                 BufferedImage.TYPE_INT_RGB);
+
+            Color oldColor = g.getColor();
+            Font oldFont = g.getFont();
+
             g = (Graphics2D) image.getGraphics();
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                              RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             g.setColor(Color.WHITE);
             g.fillRect(0, 0, image.getWidth(), image.getHeight());
             g.drawImage(temp, 0, 0, temp.getWidth(), temp.getHeight(), null);
-            g.setColor(color);
-            g.setFont(font);
+
+            g.setColor(oldColor);
+            g.setFont(oldFont);
+            metrics = g.getFontMetrics();
         }
+
     }
 
     private int spaceWidth() {
@@ -122,16 +163,18 @@ class Cursor {
             BufferedImage tempFailed = new BufferedImage(500, 200, BufferedImage.TYPE_INT_RGB);
             // looks liked drawstring doesnt care about linebreaks
             // makes sense i guess
-            tempFailed.getGraphics().drawString("Couldn't load" + url, xPad, 100);
+            tempFailed.getGraphics().drawString("Couldn't load " + url, xPad, 100);
             g.drawImage(tempFailed, xPad, temp, this.image.getWidth() - xPad * 2, 200, null);
 
         }
     }
 
     void drawBullet(int spaces, int size) {
+        Color temp = g.getColor();
         g.setColor(Color.BLACK);
         g.fillRect(xPad + (spaces - 2) * spaceWidth(), y_offset - ((wordHeight() - size)/ 2), size, size);
         // x_offset = (spaces) * spaceWidth() + xPad + spaceWidth();
+        g.setColor(temp);
     }
 
     BufferedImage getImage() {
@@ -146,24 +189,6 @@ class Cursor {
         g.setColor(temp);
     }
 
-    /*
-    void setColor(Color color) {
-        g.setColor()
-    }
-    */
-
-    void setUnderline(boolean a) {
-        u = a;
-    }
-
-    void setBold(boolean a) {
-        strong = a;
-    }
-
-    void setItalic(boolean a) {
-        itali = a;
-    }
-
     void lineBreak(int spaces) {
         y_offset(y_offset + yPad + wordHeight());
         resetX(spaces);
@@ -174,18 +199,7 @@ class Cursor {
     }
 
     void writeText(String text, int spaces) {
-        
-        // System.out.println("[" + spaces + "] " + text);
-        Font temp = g.getFont();
-        if (strong)
-            g.setFont(g.getFont().deriveFont(Font.BOLD));
-        if (u)
-            g.setFont(g.getFont().deriveFont(underline));
-        if (itali)
-            g.setFont(g.getFont().deriveFont(Font.ITALIC));
-
-        metrics = g.getFontMetrics();
-
+        // System.out.println(g.getColor() + ", " + g.getFont() + ": " + text);
         String[] words = text.split(" ", -1);
         // System.out.println(java.util.Arrays.toString(words));
         int startX = x_offset;
@@ -213,7 +227,5 @@ class Cursor {
         // can break here if too much ContentNode
         y_offset(startY - wordHeight() - yPad); // startY - wordHeight() - yPad;
         // System.out.printf("end   x=%d, y=%d\n", x_offset, y_offset);
-        g.setFont(temp);
-        metrics = g.getFontMetrics();
     }
 }
