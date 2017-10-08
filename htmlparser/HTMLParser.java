@@ -21,7 +21,6 @@ public class HTMLParser {
     }
 
     public HTMLParseTree parse() throws Exception {
-        verifyTagsMatch();
         try {
             return new HTMLParseTree(parse2());
         } finally {
