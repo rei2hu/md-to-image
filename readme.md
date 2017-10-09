@@ -20,6 +20,7 @@ Todo:
     - [x] Add proper handling for attributes
     - [x] Make classes based on behavior and not tag name
     - [x] Parse properly i.e. discard invalid tokens
+    - [ ] Handle comments (<!-- ... -->)
 - [ ] Rendering
     - [x] Automatically increase height as needed
     - [x] Handle inline content properly
