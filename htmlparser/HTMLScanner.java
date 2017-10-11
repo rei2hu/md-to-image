@@ -29,7 +29,7 @@ class HTMLScanner {
         int c;
         Token t = null;
         while ((c = scanner.read()) != -1) {
-            switch(c) {
+            switch (c) {
                 case '<':
                     // i mean if you see this tag then it cant be valid right
                     // since its like nested or something
@@ -45,6 +45,11 @@ class HTMLScanner {
                         sb.append('<').append(' ');
                     } else if (c == '/') { // closing tag
                         closeTag = true;
+                    } else if (c == '!') {
+                        // should handle comments
+                        while ((c = scanner.read()) != -1 && c != '>') {
+                            // discarding comment stuff
+                        }
                     } else { // an opening tag i hope well unicode might break it
                         openTag = true;
                     }
@@ -94,6 +99,11 @@ class HTMLScanner {
                     sb.append((char) c);
             }
             scanner.mark(1);
+        }
+        if (sb.length() > 0) {
+            t = new Content(sb.toString());
+            sb.setLength(0);
+            return t;
         }
         return null;
     }

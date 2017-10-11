@@ -17,10 +17,11 @@ Todo:
     - [x] Replace entities in content
     - [ ] Add handling for more tags
         - [ ] Tables
+        - [ ] Different header tags (h1, h2...)
     - [x] Add proper handling for attributes
     - [x] Make classes based on behavior and not tag name
     - [x] Parse properly i.e. discard invalid tokens
-    - [ ] Handle comments (<!-- ... -->)
+    - [x] Handle comments (\<!-- ... -->)
 - [ ] Rendering
     - [x] Automatically increase height as needed
     - [x] Handle inline content properly
