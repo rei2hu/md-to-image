@@ -94,9 +94,21 @@ class Cursor {
         metrics = g.getFontMetrics();
     }
 
+    public void startBlock(int fontSize) {
+        Font font = styleManager.getStyle().font;
+        Color color = styleManager.getStyle().color;
+        font = new Font(font.getName(), font.getStyle(), fontSize);
+        styleManager.addStyle(font, color);
+        g.setFont(font);
+        g.setColor(color);
+        metrics = g.getFontMetrics();
+    }
+
     public void startBlock(String fontName, int fontSize, Color color) {
         startBlock(fontName, fontSize, color, FontStyle.PLAIN);
     }
+
+
 
     public void startBlock(String fontName, int fontSize, Color color, FontStyle fStyle) {
         Font newFont = new Font(fontName, Font.PLAIN, fontSize);

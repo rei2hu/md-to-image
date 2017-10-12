@@ -14,6 +14,7 @@ public class TagNode {
 
     public TagNode(String type) {
         tag = type;
+        attributes = new Attributes();
     }
 
     public String getTagName() {
@@ -56,6 +57,10 @@ public class TagNode {
         return attributes.get(key);
     }
 
+    public void setAttribute(String key, String value) {
+        System.out.println(key + ": " + value);
+        attributes.add(key, value);
+    }
     String attributesString() {
         if (attributes == null) return "";
 

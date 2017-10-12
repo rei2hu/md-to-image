@@ -11,46 +11,45 @@ public class TagNodeMaker {
     }
 
     public TagNode makeNode(String nodeType, String content) {
-        TagNode n;
         switch(nodeType) {
             case "p":
             case "div": // lol
-                n = new BlockNode(nodeType);
-                break;
+                return new BlockNode(nodeType);
             case "u":
-                n = new UnderlineNode(nodeType);
-                break;
+                return new UnderlineNode(nodeType);
             case "ul":
-                n = new UnorderedListNode(nodeType);
-                break;
+                return new UnorderedListNode(nodeType);
             case "b":
             case "strong":
-                n = new BoldNode(nodeType);
-                break;
+                return new BoldNode(nodeType);
             case "li":
-                n = new ListItemNode(nodeType);
-                break;
+                return new ListItemNode(nodeType);
             case "hr":
-                n = new ThematicBreakNode(nodeType);
-                break;
+                return new ThematicBreakNode(nodeType);
             case "content":
-                n = new ContentNode(content);
-                break;
+                return new ContentNode(content);
             case "img":
-                n = new ImageNode(nodeType);
-                break;
+                return new ImageNode(nodeType);
             case "br":
-                n = new LineBreakNode(nodeType);
-                break;
+                return new LineBreakNode(nodeType);
             case "a":
-                n = new LinkNode(nodeType);
-                break;
+                return new LinkNode(nodeType);
             case "em":
-                n = new ItalicNode(nodeType);
-                break;
+                return new ItalicNode(nodeType);
+            case "h1":
+                return new HeaderNode(nodeType, 1);
+            case "h2":
+                return new HeaderNode(nodeType, 2);
+            case "h3":
+                return new HeaderNode(nodeType, 3);
+            case "h4":
+                return new HeaderNode(nodeType, 4);
+            case "h5":
+                return new HeaderNode(nodeType, 5);
+            case "h6":
+                return new HeaderNode(nodeType, 6);
             default:
-                n = new UnknownNode(nodeType);
+                return new UnknownNode(nodeType);
         }
-        return n;
     }
 }

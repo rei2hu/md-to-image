@@ -93,6 +93,14 @@ public class HTMLRenderer {
             drawNode(node.getLeft(), 0); // ContentNode
             cursor.endBlock();
             drawNode(node.getRight(), spaces);
+        } else if (node instanceof HeaderNode) {
+            cursor.lineBreak(spaces);
+            // kind of arbitrary size but whatever
+            cursor.startBlock(((HeaderNode) node).getSize() * 3 + 8);
+            drawNode(node.getLeft(), 0);
+            cursor.endBlock();
+            cursor.lineBreak(spaces);
+            drawNode(node.getRight(), spaces);
         } else if (node instanceof UnorderedListNode) {
             // cursor.lineBreak(spaces);
             drawNode(node.getLeft(), spaces + 4);

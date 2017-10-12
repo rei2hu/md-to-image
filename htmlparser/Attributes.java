@@ -45,39 +45,6 @@ public class Attributes implements java.lang.Iterable<Attribute> {
                 add(keyvalue[0], keyvalue[1]);
             }
         }
-        /*
-        for (int i = 0; i < m.groupCount(); i++) {
-            // this is xxxx="something";
-            // System.out.println(m.group(i));
-            System.out.println(m.group(i));
-            String[] keyvalue = m.group(i).split("=");
-            if (keyvalue[0].equalsIgnoreCase("style")) {
-                String[] declarations = keyvalue[1].substring(1, keyvalue[1].length() - 1).split(";");
-                for (String s: declarations) {
-                    String[] styleValue = s.split(":");
-                    add(styleValue[0], styleValue[1]);
-                }
-            } else if (keyvalue[0].equalsIgnoreCase("src")) {
-                add(keyvalue[0], keyvalue[1]);
-            }
-        }
-
-//        return;
-//        String[] declarations = styleDeclaration.split("=");
-//        // now we have
-//        // declarations[0]: style=
-//        // declarations[1]: "margin-left: 18pt;"
-//        if (declarations.length < 2) {
-//            // some error
-//        } else {
-//            declarations = declarations[1].substring(1, declarations[1].length() - 1).split(";");
-//            for (String s: declarations) {
-//                String[] keyvalue = s.split(":");
-//                add(keyvalue[0].trim(), keyvalue[1].trim());
-//            }
-//
-//        }
-        */
     }
 
     public Iterator<Attribute> iterator() {
@@ -92,7 +59,7 @@ public class Attributes implements java.lang.Iterable<Attribute> {
         return sb.toString();
     }
 
-    void add(String key, String value) {
+    public void add(String key, String value) {
         Attribute a = new Attribute(key, value);
         attributes.put(key, a);
     }
