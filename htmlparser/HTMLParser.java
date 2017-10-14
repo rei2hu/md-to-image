@@ -10,16 +10,29 @@ import htmlparser.tagnodes.TagNode;
 import htmlparser.tagnodes.HTMLParseTree;
 import htmlparser.tagnodes.TagNodeMaker;
 
+/**
+ * This class actually parses the html and will give a parse tree
+ */
+
 public class HTMLParser {
 
     private HTMLScanner sc;
     private TagNodeMaker tnm;
 
+    /**
+     * The constructor
+     * @param s the string to make the parser of
+     */
     public HTMLParser(String s) {
         sc = new HTMLScanner(s);
         tnm = new TagNodeMaker();
     }
 
+    /**
+     * Makes a parse tree
+     * @return
+     * @throws Exception
+     */
     public HTMLParseTree parse() throws Exception {
         try {
             return new HTMLParseTree(parse2());
@@ -28,6 +41,11 @@ public class HTMLParser {
         }
     }
 
+    /**
+     * Helper method for parsing
+     * @return A TagNode that represents the root of a parse tree
+     * @throws Exception If something is weird with the tags (unmatched stuff)
+     */
     private TagNode parse2() throws Exception {
         // if just put opening tag on
         // next node will be nested to the left unless closing
@@ -95,6 +113,11 @@ public class HTMLParser {
         return root;
     }
 
+    /**
+     * Makes sure that the tags are lined up properly
+     * @return A queue of unmatched tags which can be considered "empty tags" e.g. <br>
+     * @throws Exception If something is weird with the tags
+     */
     private Queue<Tag> verifyTagsMatch() throws Exception {
         HTMLScanner sc = this.sc.clone();
         Deque<Tag> stack = new LinkedList<>();

@@ -7,6 +7,11 @@ import java.io.Reader;
 
 import htmlparser.tokens.*;
 
+/**
+ * This class is for transforming a string into various tokens
+ * which are then used by the parser
+ */
+
 class HTMLScanner {
 
     private Reader scanner;
@@ -14,17 +19,29 @@ class HTMLScanner {
     private String s;
     Boolean openTag = false, closeTag = false, content = false;
 
+    /**
+     * The constructor
+     * @param s the string to scan
+     */
     HTMLScanner(String s) {
         scanner = new BufferedReader(new StringReader(s));
         this.s = s;
         sb = new StringBuilder();
     }
 
+    /**
+     * A clone method
+     * @return returns a new instance of the HTMLScanner with the same string
+     */
     public HTMLScanner clone() {
         return new HTMLScanner(s);
     }
 
-    // honestly I think this needs a rewrite
+    /**
+     * gives the next token made from the string
+     * @return a token object
+     * @throws java.io.IOException if the scanner messes up somehow
+     */
     Token nextToken() throws java.io.IOException {
         int c;
         Token t = null;
@@ -100,6 +117,7 @@ class HTMLScanner {
             }
             scanner.mark(1);
         }
+        // just in case there's some leftovers
         if (sb.length() > 0) {
             t = new Content(sb.toString());
             sb.setLength(0);
@@ -108,6 +126,10 @@ class HTMLScanner {
         return null;
     }
 
+    /**
+     * closes the scanner
+     * @throws java.io.IOException if the scanner messes up
+     */
     void close() throws java.io.IOException {
         scanner.close();
     }

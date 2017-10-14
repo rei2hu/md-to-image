@@ -4,6 +4,10 @@ import htmlparser.Attributes;
 import htmlparser.Attribute;
 import htmlparser.tokens.Tag;
 
+/**
+ * A superclass for all nodes that will be found in the parse tree
+ */
+
 public class TagNode {
 
     private TagNode left;

@@ -3,8 +3,11 @@ package htmlparser.tagnodes;
 import java.util.HashMap;
 import java.util.regex.*;
 
-public class ContentNode extends InlineTagNode {
+/**
+ * A node that represents text
+ */
 
+public class ContentNode extends InlineTagNode {
 
     // keel me
     // from  https://github.com/mdevils/node-html-entities/blob/master/lib/html4-entities.js#L31

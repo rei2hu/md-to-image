@@ -1,12 +1,14 @@
 package htmlparser;
 
-import htmlparser.Attribute;
-
 import java.util.Hashtable;
 import java.lang.StringBuilder;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+/**
+ * This class is for representing the different attributes a tag can have
+ */
 
 public class Attributes implements java.lang.Iterable<Attribute> {
 
@@ -15,10 +17,17 @@ public class Attributes implements java.lang.Iterable<Attribute> {
     private static Pattern attributesRegex = Pattern.compile("(.+?=(?:(?:\".*?\")|(?:'.*?')))");
     // private static Pattern srcRegex = Pattern.compile("src=((\".*?\")|('.*?'))");
 
+    /**
+     * Default constructor
+     */
     public Attributes() {
         attributes = new Hashtable<>();
     }
 
+    /**
+     * A constructor that takes a string in the form key=value key=value... with some sort of delimiter
+     * @param keyvalues the string of key values
+     */
     public Attributes(String keyvalues) {
         attributes = new Hashtable<>();
         // cant split by space because attributes can have space in them
@@ -47,10 +56,18 @@ public class Attributes implements java.lang.Iterable<Attribute> {
         }
     }
 
+    /**
+     * Get's an iterator for this object
+     * @return An iterator over each attribute.
+     */
     public Iterator<Attribute> iterator() {
         return attributes.values().iterator();
     }
 
+    /**
+     * Basic to string method for debugging really
+     * @return a string in the from key=value key=value...
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Attribute a: attributes.values()) {
@@ -59,11 +76,21 @@ public class Attributes implements java.lang.Iterable<Attribute> {
         return sb.toString();
     }
 
+    /**
+     * Add an attribute
+     * @param key The attribute's key
+     * @param value The attribute's value
+     */
     public void add(String key, String value) {
         Attribute a = new Attribute(key, value);
         attributes.put(key, a);
     }
 
+    /**
+     * Get an attribute with it's key
+     * @param key the key to find
+     * @return the attribute
+     */
     public Attribute get(String key) {
         return attributes.get(key);
     }

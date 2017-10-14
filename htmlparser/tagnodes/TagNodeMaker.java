@@ -1,15 +1,30 @@
 package htmlparser.tagnodes;
 
+/**
+ * This class is used to create nodes based on the string given
+ */
+
 public class TagNodeMaker {
 
     public TagNodeMaker() {
 
     }
 
+    /**
+     * Helper method
+     * @param nodeType The string representing the tag name
+     * @return A node
+     */
     public TagNode makeNode(String nodeType) {
         return makeNode(nodeType, "");
     }
 
+    /**
+     * Create a node based on a tag's name
+     * @param nodeType The string representing the tag name
+     * @param content The content of the node
+     * @return
+     */
     public TagNode makeNode(String nodeType, String content) {
         switch(nodeType) {
             case "p":
